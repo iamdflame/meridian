@@ -38,6 +38,18 @@ export interface ApassRecord {
   expirationTime: number;
   currentKycHash: string;
   countries?: string[];
+  /** live list rows carry these */
+  customerId?: string;
+  walletAddress?: string;
+  status?: number;
+}
+
+/** query_apass_list is paginated on the live sandbox. */
+export interface ApassPage {
+  total: number;
+  page: number;
+  pageSize: number;
+  items: ApassRecord[];
 }
 
 export interface VerifyResult {

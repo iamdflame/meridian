@@ -44,7 +44,9 @@ export async function postJson<T>(
         body: JSON.stringify(payload ?? {}),
         signal: ac.signal,
       });
-      last = (await res.json()) as CvEnvelope<T>;
+      const raw = (await res.json()) as CvEnvelope<T> & { status?: number; error?: string };
+      // Some gateway errors bypass the cv envelope (e.g. raw 500 {status,error,path}) — normalize.
+      last = raw.code !== undefined ? raw : ({ code: `HTTP_${raw.status ?? res.status}`, message: raw.error ?? res.statusText, data: undefined as T } as CvEnvelope<T>);
       if (res.ok && !isTransient(last)) return { ...last, source };
     } catch (err) {
       lastErr = err;

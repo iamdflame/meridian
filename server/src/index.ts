@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from "node:fs";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { z } from "zod";
-import { fromEnv, VerifyCode } from "@meridian/cleanverse";
+import { CooperateClient, fromEnv, VerifyCode } from "@meridian/cleanverse";
 import { BookStore } from "./book/store.js";
 import { seedBook } from "./book/seed.js";
 import { sweep } from "./sim/sweep.js";
@@ -107,13 +107,17 @@ app.post("/api/enact", async (req, reply) => {
   const result = sweep(book, draft);
   const version = (book.activePolicy()?.version ?? 0) + 1;
 
-  // 1) Cleanverse write — the real rule surface (live sandbox or honest fixture).
-  const atoken = "0xaC0893567D43C3E7e6e35a72803df05416C1f20D"; // sandbox aUSDC on Monad (recorded)
-  const cv = await cooperate.atokenSetRule({
-    chain: "monad",
-    atoken,
-    rules: [draft],
-  });
+  // 1) Cleanverse write — the real rule surface. Shared-tenant safety: the sandbox
+  // aUSDC is shared by all teams, so we only write rules to an A-Token we own
+  // (MERIDIAN_ATOKEN); otherwise the write is an honestly-labeled fixture.
+  const ownAtoken = process.env.MERIDIAN_ATOKEN;
+  let cv;
+  if (ownAtoken) {
+    cv = await cooperate.atokenAddRule({ chain: "monad", atoken: ownAtoken, rule: draft });
+  } else {
+    cooperate.fixtures.addRule("meridian-demo-asset", draft);
+    cv = { code: "0000", message: "success", data: { txHash: `0xfixture_rule_${Date.now()}` }, source: "fixture" as const };
+  }
   if (cv.code !== "0000") {
     reply.code(502);
     return { error: `cleanverse rule write failed: ${cv.message}`, source: cv.source };
@@ -418,7 +422,34 @@ app.get("/api/evidence/:version", async (req, reply) => {
 // ---- boot -------------------------------------------------------------------------------------
 /** Seed the book and sync the chain — everything except listening. */
 export async function prepare(): Promise<void> {
-  await seedBook(book, cooperate);
+  // Live mode: seed bulk book via a local fixture client — the sandbox tenant is
+  // shared by every team, so we never mass-write there (real rows are overlaid below).
+  // Fixture mode: seed through the main client so its store knows every holder.
+  const seeder = cooperate.live ? new CooperateClient({ base: "local://seed", allowFixtures: true }) : cooperate;
+  await seedBook(book, seeder);
+
+  // Overlay REAL sandbox credential state for the first 12 holders (created once
+  // via scripts/sync-live-holders.ts). Rows found live get live provenance.
+  if (cooperate.live) {
+    let liveRows = 0;
+    const wallets = book.list().slice(0, 12);
+    for (const h of wallets) {
+      const rec = await cooperate.queryApass({ chain: "monad", address: h.wallet });
+      if (rec.code === "0000" && rec.data?.cvRecordId) {
+        h.cvRecordId = rec.data.cvRecordId;
+        h.tier = Number(rec.data.tier) || h.tier;
+        h.subTier = rec.data.subTier ?? h.subTier;
+        h.country = rec.data.countries?.[0] ?? h.country;
+        h.status = (rec.data.status ?? rec.data.state ?? 1) as number;
+        h.expiry = rec.data.expirationTime ?? h.expiry;
+        h.source = "live";
+        book.upsertHolder(h);
+        liveRows++;
+      }
+    }
+    book.log("sync", { liveOverlay: liveRows, tenant: "shared-sandbox" });
+  }
+
   if (keeper) {
     const holders = book.list();
     const tx = await keeper.attestBook(holders);

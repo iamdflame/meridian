@@ -1,7 +1,7 @@
 import { aesEncrypt } from "./crypto.js";
 import { FixtureStore } from "./fixtures.js";
 import { postJson } from "./http.js";
-import type { ApassRecord, CvResult, GenerateApassInput, RuleV2, UpdateStatusInput, VerifyResult } from "./types.js";
+import type { ApassPage, ApassRecord, CvResult, GenerateApassInput, RuleV2, UpdateStatusInput, VerifyResult } from "./types.js";
 import { ApassState, OK, VerifyCode } from "./types.js";
 
 export interface CooperateConfig {
@@ -69,16 +69,34 @@ export class CooperateClient {
     return rec ? ok(rec, "fixture") : err("A-Pass not found", "fixture");
   }
 
-  async queryApassList(): Promise<CvResult<ApassRecord[]>> {
-    if (this.live) return this.read("query_apass_list", {});
+  async queryApassList(p: { page?: number; pageSize?: number } = {}): Promise<CvResult<ApassPage>> {
+    if (this.live) return this.read("query_apass_list", { page: p.page ?? 1, pageSize: p.pageSize ?? 20 });
     this.requireFixtures();
-    return ok(this.fixtures.listApass(), "fixture");
+    const items = this.fixtures.listApass();
+    return ok({ total: items.length, page: 1, pageSize: items.length, items }, "fixture");
   }
 
   /** The pre-transaction gate. Result code 4 = valid A-Pass + transfer allowed. */
   async verifyApass(p: { chain: string; atoken: string; address: string }): Promise<CvResult<VerifyResult>> {
     if (this.live) {
       const res = await this.read<VerifyResult>("verify_apass", p);
+      // Sandbox reality: frozen/expired credentials surface as an envelope-level
+      // business error ("APassNotActive" / on-chain revert), not a data.code — normalize.
+      if (res.code !== OK && /APassNotActive|not active|failed to check apass/i.test(res.message)) {
+        return ok(
+          {
+            code: VerifyCode.ApassBlocked,
+            message: "A-Pass exists but cannot transfer (frozen or expired)",
+            ...(res.data && (res.data as { magickLink?: string }).magickLink !== undefined
+              ? { magickLink: (res.data as { magickLink?: string }).magickLink! }
+              : {}),
+            chain: p.chain,
+            atoken: p.atoken,
+            address: p.address,
+          },
+          "live",
+        );
+      }
       return res;
     }
     this.requireFixtures();

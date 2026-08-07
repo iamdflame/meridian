@@ -1,14 +1,15 @@
 # Deployments
 
-## Monad Testnet (chain 10143) — PENDING FUNDING
+## Monad Testnet (chain 10143) — FUNDED ✓, deploy at window open (Aug 8 00:00 UTC)
 
-Deployer: `0xeCF6C29Ec1DAdBdD66Ecd230ba7171986c6B5B0e` (testnet-only throwaway key, lives in local .env)
+Deployer: `0xeCF6C29Ec1DAdBdD66Ecd230ba7171986c6B5B0e` — balance 5 MON ✓ (key in local .env only)
 
-> **HUMAN ACTION REQUIRED #2** — the Monad faucet is captcha-gated:
-> 1. Open https://faucet.monad.xyz (or https://testnet.monad.xyz) in a browser
-> 2. Request MON for `0xeCF6C29Ec1DAdBdD66Ecd230ba7171986c6B5B0e` (5+ MON if tiers offered; deploy+seed needs ~2)
-> 3. Then run: `cd contracts && DEPLOYER_KEY=$DEPLOYER_KEY ../.toolchain/forge script script/Deploy.s.sol --rpc-url https://testnet-rpc.monad.xyz --broadcast`
-> 4. Addresses land in contracts/deployments/10143.json automatically; paste them into the table below.
+> Deploy inside the hacking window so the deploy block timestamps land in-window:
+> ```bash
+> cd contracts && set -a && . ../.env && set +a && \
+>   ../.toolchain/forge script script/Deploy.s.sol --rpc-url "$MONAD_RPC" --broadcast
+> ```
+> Addresses land in contracts/deployments/10143.json; paste below + commit.
 
 | Contract | Address | Explorer |
 |---|---|---|
