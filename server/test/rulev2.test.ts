@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Reason, evaluate } from "../src/sim/rulev2.js";
-import { generateVectors } from "../src/sim/vectors.js";
+import { Reason, evaluate, generateVectors } from "@meridian/sim";
 
 describe("RuleV2 TS engine", () => {
   it("agrees with itself across regeneration (deterministic vectors)", () => {

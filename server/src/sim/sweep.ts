@@ -1,4 +1,4 @@
-import { Reason, evaluate, type SimRule } from "./rulev2.js";
+import { Reason, evaluate, type SimRule } from "@meridian/sim";
 import type { BookStore } from "../book/store.js";
 
 export interface HolderImpact {

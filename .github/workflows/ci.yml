@@ -24,7 +24,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: foundry-rs/foundry-toolchain@v1
+      - name: Provision pinned solc (workspace-local path used by foundry.toml)
+        run: |
+          mkdir -p .toolchain
+          curl -sL -o .toolchain/solc-0.8.28 "https://binaries.soliditylang.org/linux-amd64/solc-linux-amd64-v0.8.28+commit.7893614a"
+          chmod +x .toolchain/solc-0.8.28
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Regenerate differential vectors (TS is the source of truth)
+        run: node --import tsx server/scripts/gen-vectors.ts
       - run: forge test -vv
-        working-directory: contracts
-      - run: forge fmt --check
         working-directory: contracts

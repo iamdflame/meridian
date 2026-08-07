@@ -6,7 +6,7 @@ import { fromEnv, VerifyCode } from "@meridian/cleanverse";
 import { BookStore } from "./book/store.js";
 import { seedBook } from "./book/seed.js";
 import { sweep } from "./sim/sweep.js";
-import { Reason, REASON_LABEL, evaluate, type SimRule } from "./sim/rulev2.js";
+import { Reason, REASON_LABEL, evaluate, type SimRule } from "@meridian/sim";
 import { buildEvidence, recordEnactmentSweep } from "./evidence.js";
 import { Keeper, type Deployments } from "./chain/keeper.js";
 import { demoKey, demoWallet } from "./chain/wallets.js";

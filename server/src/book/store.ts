@@ -1,5 +1,5 @@
-import type { SimHolder, SimRule } from "../sim/rulev2.js";
-import { Reason } from "../sim/rulev2.js";
+import type { SimHolder, SimRule } from "@meridian/sim";
+import { Reason } from "@meridian/sim";
 
 export interface HolderRow extends SimHolder {
   wallet: string;

@@ -3,7 +3,7 @@ import { CooperateClient } from "@meridian/cleanverse";
 import { BookStore } from "../src/book/store.js";
 import { seedBook } from "../src/book/seed.js";
 import { sweep } from "../src/sim/sweep.js";
-import { Reason } from "../src/sim/rulev2.js";
+import { Reason } from "@meridian/sim";
 
 const book = new BookStore();
 

@@ -1,6 +1,6 @@
 /** Writes the shared differential vectors to contracts/test/vectors.json. */
 import { writeFileSync } from "node:fs";
-import { generateVectors } from "../src/sim/vectors.js";
+import { generateVectors } from "@meridian/sim";
 
 const vectors = generateVectors(500);
 const out = new URL("../../contracts/test/vectors.json", import.meta.url);

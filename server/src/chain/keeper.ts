@@ -18,7 +18,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { engineAbi, cashAbi, noteAbi, policyAbi, registryAbi } from "./abi.js";
 import type { HolderRow } from "../book/store.js";
-import type { SimRule } from "../sim/rulev2.js";
+import type { SimRule } from "@meridian/sim";
 
 export interface Deployments {
   chainId: number;
