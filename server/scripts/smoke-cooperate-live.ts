@@ -18,7 +18,8 @@ let pass = 0;
 let fail = 0;
 const ok = (label: string, cond: boolean, detail?: unknown) => {
   console.log(`${cond ? "✓" : "✗"} ${label}${detail ? ` — ${JSON.stringify(detail).slice(0, 160)}` : ""}`);
-  cond ? pass++ : fail++;
+  if (cond) pass++;
+  else fail++;
 };
 
 // 1. verify_apass on an unknown wallet → NoApass (2) or AtokenNotFound (1)
