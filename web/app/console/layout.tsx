@@ -24,7 +24,12 @@ function Shell({ children }: { children: React.ReactNode }) {
         style={{ borderColor: "var(--line-1)", background: "var(--bg-1)" }}
       >
         <Link href="/" className="mb-4 flex items-center px-2 py-1">
-          <Logo size={22} withWord />
+          <span className="max-lg:hidden">
+            <Logo size={22} withWord />
+          </span>
+          <span className="lg:hidden">
+            <Logo size={22} />
+          </span>
         </Link>
         {NAV.map((n) => {
           const active = path === n.href;

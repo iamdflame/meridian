@@ -289,11 +289,11 @@ async function fetchJson<T>(url: string, init?: RequestInit, timeoutMs = 4000): 
   }
 }
 
-/** Probe once per session whether a live Meridian server is reachable. */
+/** Probe once per session whether a live Meridian server is reachable (server-side, console-clean). */
 export async function detectServer(): Promise<boolean> {
   try {
-    await fetchJson(`${API}/status`, undefined, 2500);
-    return true;
+    const res = await fetchJson<{ server: boolean }>(`/api/probe`, undefined, 3000);
+    return res.server === true;
   } catch {
     return false;
   }

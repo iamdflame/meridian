@@ -19,7 +19,7 @@ export default function StudioPage() {
   const [sweeping, setSweeping] = useState(false);
   const [enacting, setEnacting] = useState(false);
   const [enacted, setEnacted] = useState(false);
-  const [proof, setProof] = useState<{ before?: { ok: boolean; label?: string }; after?: { ok: boolean; label?: string; source?: string } }>({});
+  const [proof, setProof] = useState<{ baseVersion?: number; before?: { ok: boolean; label?: string }; after?: { ok: boolean; label?: string; source?: string } }>({});
 
   const draft: SimRule | undefined = useMemo(() => {
     if (!active) return undefined;
@@ -68,9 +68,10 @@ export default function StudioPage() {
     setEnacting(true);
     const memo = describeDraft(draft, active);
     void (async () => {
+      const baseVersion = book.policies.length;
       if (proofPair) {
         const b = await proveTransfer(proofPair.fromIdx, proofPair.toIdx);
-        setProof({ before: { ok: b.ok, ...(b.reasonLabel !== undefined ? { label: b.reasonLabel } : {}) } });
+        setProof({ baseVersion, before: { ok: b.ok, ...(b.reasonLabel !== undefined ? { label: b.reasonLabel } : {}) } });
       }
       await enact(draft, memo);
       if (proofPair) {
@@ -235,7 +236,7 @@ export default function StudioPage() {
                 <span className="text-[12px]" style={{ color: "var(--ok-1)" }}>
                   before · transfer settled
                 </span>
-                <span className="num text-[10px] text-ink-3">under v{book.policies.length}</span>
+                <span className="num text-[10px] text-ink-3">under v{proof.baseVersion ?? book.policies.length}</span>
               </div>
             )}
             {proof.after && (

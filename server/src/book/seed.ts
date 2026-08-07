@@ -39,7 +39,8 @@ export async function seedBook(book: BookStore, cooperate: CooperateClient, opts
   const now = Math.floor(Date.now() / 1000);
 
   for (let i = 0; i < count; i++) {
-    const name = `${FIRST[i % FIRST.length]} ${LAST[(i * 7 + 3) % LAST.length]}`;
+    // offset by ⌊i/16⌋ so name pairs never repeat across the 48-holder book
+    const name = `${FIRST[(i + Math.floor(i / 16) * 3) % FIRST.length]} ${LAST[(i * 7 + Math.floor(i / 16) * 5 + 3) % LAST.length]}`;
     const country = COUNTRIES[(i * 5 + 1) % COUNTRIES.length]!;
     const tier = 5 + Math.floor(rand() * 75);
     const subTier = Math.min(99, Math.max(1, Math.floor(tier / 2)));
@@ -93,7 +94,7 @@ export async function seedBook(book: BookStore, cooperate: CooperateClient, opts
   book.policies.push({
     version: 1,
     rule: { group: "", subGroup: "", minTier: 10, minSubTier: 0, countries: [], isBlackList: true, active: true },
-    memo: "v1: baseline — minTier 10, no jurisdiction restriction",
+    memo: "baseline — minTier 10, no jurisdiction restriction",
     enactedAt: now,
     cleanverse: { source: book.list()[0]?.source ?? "fixture" },
   });
