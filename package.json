@@ -1,0 +1,23 @@
+{
+  "name": "meridian",
+  "private": true,
+  "packageManager": "pnpm@10.32.1",
+  "scripts": {
+    "lint": "eslint packages server web --ext .ts,.tsx",
+    "typecheck": "pnpm -r --filter '!web' exec tsc --noEmit && pnpm --filter web exec tsc --noEmit",
+    "test": "vitest run",
+    "test:contracts": "cd contracts && forge test -vv",
+    "dev:server": "pnpm --filter @meridian/server dev",
+    "dev:web": "pnpm --filter web dev",
+    "e2e": "tsx server/scripts/e2e-demo-path.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "eslint": "^9.17.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^2.1.8",
+    "tsx": "^4.19.2",
+    "prettier": "^3.4.2"
+  }
+}

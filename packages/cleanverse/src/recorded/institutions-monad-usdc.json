@@ -1,0 +1,37 @@
+{
+  "chain": "monad",
+  "token_whitelist": [
+    {
+      "origin_symbol": "usdc",
+      "origin_token_address": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+      "atoken_symbol": "ausdc",
+      "atoken_address": "0xaC0893567D43C3E7e6e35a72803df05416C1f20D",
+      "whitelist": [
+        {
+          "service_name": "test",
+          "entity_name": "test",
+          "category": "test",
+          "icon": ""
+        },
+        {
+          "service_name": "lulu",
+          "entity_name": "lulu",
+          "category": "lulu",
+          "icon": ""
+        },
+        {
+          "service_name": "usdc_faucet",
+          "entity_name": "usdc_faucet",
+          "category": "usdc_faucet",
+          "icon": ""
+        },
+        {
+          "service_name": "Anchorage Digital",
+          "entity_name": "Anchorage Digital NY, LLC",
+          "category": "Infrastructure",
+          "icon": "https://images.cleanverse.com/member/ANCHORAGE DIGITAL SINGAPORE Pte. Ltd..png"
+        }
+      ]
+    }
+  ]
+}
