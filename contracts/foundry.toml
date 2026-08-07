@@ -7,7 +7,10 @@ solc = "../.toolchain/solc-0.8.28"
 optimizer = true
 optimizer_runs = 200
 bytecode_hash = "none"
-fs_permissions = [{ access = "read-write", path = "./deployments" }]
+fs_permissions = [
+    { access = "read-write", path = "./deployments" },
+    { access = "read", path = "./test/vectors.json" },
+]
 
 [fmt]
 line_length = 120

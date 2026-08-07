@@ -14,7 +14,7 @@ const input = {
   expirationTime: Math.floor(Date.now() / 1000) + 86_400,
   wallet,
   identityDataList: [{ idType: "PASSPORT", fullName: "Test Holder", issuingCountryISO2: "SG" }],
-} as const;
+};
 
 describe("CooperateClient fixture adapter (credential-less mode)", () => {
   it("tags every response as fixture — the honesty invariant", async () => {
