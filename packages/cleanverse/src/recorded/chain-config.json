@@ -2289,6 +2289,18 @@
           "token_category": "atoken",
           "access_core": "0x8F118338a1fa41E7Fa86Be19A4e8B99Ed58A6EcC",
           "deposit_gateway": "0x8e084646080a35347B2D053Dd72F550f12245c8B"
+        },
+        {
+          "chain": "ethereum",
+          "symbol": "BND525123",
+          "a_symbol": "",
+          "token_address": "0xc7ce7F96B92EC7fDf13D16E5448c092A8F0743ad",
+          "name": "NIBT7",
+          "decimals": 6,
+          "icon": "https://raw.githubusercontent.com/skymiss18/casper-agentic-buildathon/main/app/public/logo.png",
+          "token_category": "atoken",
+          "access_core": "0x8F118338a1fa41E7Fa86Be19A4e8B99Ed58A6EcC",
+          "deposit_gateway": "0x8e084646080a35347B2D053Dd72F550f12245c8B"
         }
       ]
     },
