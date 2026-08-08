@@ -25,7 +25,7 @@
 
 **Act 3 — the proof stack (2:30–3:00)**
 - 2:30–2:44 · Terminal: `pnpm judge` runs, scoreboard prints green. VO: "One command: a hundred and two thousand property cases, five hundred differential vectors, nine-of-nine live sandbox calls, deployed contracts. The repo audits itself."
-- 2:44–3:00 · On-screen: composition census + measured study numbers. VO: "A hundred and thirty of the hundred fifty-five projects here could request a blast-radius proof today. We measured it: seventy tokens, seven chains, six holders stranded, one hundred fifty-one thousand dollars — before a rule ever became law."
+- 2:44–3:00 · On-screen: composition census + measured study numbers. VO: "Our conservative census names fifty-nine projects here that can consume this proof today. We measured the need: seventy tokens, seven chains, six holders stranded, one hundred fifty-one thousand dollars — before a rule ever became law."
 
 **End card (3:00–3:05):** logo, repo URL, Monad addresses (5), `pnpm judge` line, LIVE·SANDBOX chip. Silence.
 

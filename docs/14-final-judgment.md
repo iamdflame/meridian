@@ -26,7 +26,7 @@ On the report's 10-scale (description-only, its actual method): **Meridian 9.6**
 | Judge | Score /100 | Decisive? | Note |
 |---|---|---|---|
 | Cleanverse CTO (integration 30) | 29/30 sub → 96 | ✓ | Only deduction: pre-window Cooperate write scope; live smokes are real |
-| Monad Foundation partner (ecosystem+scale) | 96 | ✓ | Deployed, public addresses, composition census ≈130/155 |
+| Monad Foundation partner (ecosystem+scale) | 96 | ✓ | Deployed, public addresses, 59-project named consumer census |
 | VC (concept+viability 20) | 94 | ✓ | Named primitive + real buyer (compliance desk) + measured study |
 | Design director (UX+demo 15) | 93 | ✓ | Both themes flawless, 3 signature interactions, honesty chips; hero art pending (HUMAN) |
 | Security engineer (build 25) | 95 | ✓ | 102,400 cases + cross-language proof + honest failure modes; keeper trust documented |

@@ -23,16 +23,17 @@ The test: *"no top-10 entry can be described in this sentence."* ✓ — none pr
 
 A pre-enactment blast-radius proof is requestable by **any issuer or protocol that changes a rule on a gated asset**. From the report's own field:
 
-- **Every gated-venue/lending/RWA project that mutates policy**: Venue, Plumb (could anchor refusals into our future-tense proof), Tenor, Covenant, Pignora, Recourse, Mezzanine, STRATA, NetClear, KLYRO, Continuity, Crossing, ClearFactor, Virgil, and ~90 more invoice/lending/agent/pool projects = **~130 of 155** registered projects operate a rule-gated asset or pool and could consume a blast-radius proof today.
-- Consumable via: REST (`POST /api/skills/simulate_policy` + `query_book`), the on-chain anchor (`PolicyRegistry` version hash), and our published Agent Skill (the clevrpay pattern).
+- **59 named external projects** expose an explicit gated trading, credit, issuance, pool, settlement, or agent decision in their registered description. The full lower-bound table names every project and integration point in [`protocol-consumers.md`](protocol-consumers.md).
+- **95 registrations are not counted** because their one-line public description does not establish a mutable gated rule. Meridian is the proof producer. Arithmetic: 59 + 95 + 1 = 155.
+- Consumable via: the public `IPreEnactmentProof` Solidity interface, REST (`POST /api/skills/simulate_policy` + `query_book`), and the published Agent Skill.
 
-We state it in the description: *"≈130 of the 155 registered projects operate a rule-gated asset; each could request a Meridian blast-radius proof before their next policy change."* That is a composition claim the judge rewarded Recourse (8.6) for implying; ours is explicit, counted, and API-real.
+This is deliberately a conservative lower bound, not an extrapolation from track labels.
 
 ## Propagation checklist
 
 - [x] Name: "pre-enactment proofs" / "blast-radius proof engine"
-- [ ] Contracts: NatSpec on `PolicyRegistry` + `VerifiedAssetToken` names the primitive; event `PolicyEnacted` doc mentions the anchored proof
-- [ ] Server: skill `simulate_policy` description leads with "blast-radius proof"
-- [ ] UI: landing hero + studio header lead with the mechanism sentence
-- [ ] README first paragraph = the mechanism sentence
-- [ ] Description (Phase D) opens with it
+- [x] Contracts: `IPreEnactmentProof` + tested `ProofGatedProtocol` consumer
+- [x] Server: issuer anchors the exact sweep digest before enactment
+- [x] UI: landing hero + studio header lead with the mechanism sentence
+- [x] README first paragraph = the mechanism sentence
+- [x] Description opens with it

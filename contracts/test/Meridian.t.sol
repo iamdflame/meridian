@@ -7,6 +7,7 @@ import {PolicyRegistry} from "../src/PolicyRegistry.sol";
 import {VerifiedAssetToken} from "../src/VerifiedAssetToken.sol";
 import {DistributionEngine} from "../src/DistributionEngine.sol";
 import {SettlementToken} from "../src/SettlementToken.sol";
+import {ProofGatedProtocol} from "../src/examples/ProofGatedProtocol.sol";
 import {IPreEnactmentProof} from "../src/interfaces/IPreEnactmentProof.sol";
 import {RuleV2Lib} from "../src/lib/RuleV2Lib.sol";
 
@@ -414,6 +415,31 @@ contract PolicyRegistryTest is Base {
     function test_noActivePolicyReverts() public {
         vm.expectRevert(abi.encodeWithSelector(PolicyRegistry.NoActivePolicy.selector, keccak256("other")));
         pol.activeRule(keccak256("other"));
+    }
+}
+
+contract ProofGatedProtocolTest is Base {
+    ProofGatedProtocol consumer;
+
+    function setUp() public override {
+        super.setUp();
+        consumer = new ProofGatedProtocol(pol);
+    }
+
+    function test_protocolConsumesActiveProof() public view {
+        assertEq(consumer.requirePolicyProof(ASSET, 0), pol.activeProof(ASSET).proofHash);
+    }
+
+    function test_protocolRejectsImpactAboveItsLimit() public {
+        RuleV2Lib.Rule memory rule = _rule(30, 0, new bytes2[](0), true);
+        bytes32 proofHash = keccak256("protocol-consumer-proof");
+        vm.startPrank(admin);
+        pol.anchorProof(ASSET, rule, proofHash, 6, 151_187e6);
+        pol.enact(ASSET, rule, "v2", proofHash);
+        vm.stopPrank();
+
+        vm.expectRevert(abi.encodeWithSelector(ProofGatedProtocol.ImpactLimitExceeded.selector, 151_187e6, 100_000e6));
+        consumer.requirePolicyProof(ASSET, 100_000e6);
     }
 }
 
