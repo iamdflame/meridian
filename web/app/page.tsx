@@ -112,6 +112,9 @@ export default function Landing() {
           <a href="https://github.com/iamdflame/meridian" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink-1">
             GitHub
           </a>
+          <Link href="/verify" className="transition-colors hover:text-ink-1 max-sm:hidden">
+            Verify proof
+          </Link>
           <ThemeToggle />
           <Link
             href="/console"

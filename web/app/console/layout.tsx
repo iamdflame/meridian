@@ -13,6 +13,7 @@ const NAV = [
   { href: "/console/distributions", label: "Distributions", icon: "M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" },
   { href: "/console/evidence", label: "Evidence", icon: "M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0" },
   { href: "/console/agent", label: "Agent Surface", icon: "M9 3h6l1 4 4 2-2 5 2 5H4l2-5-2-5 4-2z" },
+  { href: "/verify", label: "Public Verifier", icon: "M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3m-3 9l2 2 4-4" },
 ];
 
 function Shell({ children }: { children: React.ReactNode }) {
