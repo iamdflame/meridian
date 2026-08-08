@@ -425,6 +425,59 @@ app.post("/api/skills/simulate_policy", async (req) => {
   return serialize({ code: "0000", message: "success", data: result });
 });
 
+app.post("/api/skills/verify_policy_proof", async () => {
+  const policy = book.activePolicy();
+  if (!policy?.proofHash) {
+    return {
+      code: "0003",
+      message: "active policy has no proof digest",
+      data: { assetId: book.assetId, verified: false, source: "unavailable" },
+    };
+  }
+  const identity = { assetId: book.assetId, policyVersion: policy.version, proofHash: policy.proofHash };
+  if (!keeper) {
+    return {
+      code: "0000",
+      message: "proof digest available; chain verification unavailable in fixture mode",
+      data: { ...identity, verified: false, source: "fixture" },
+    };
+  }
+  try {
+    const proof = await keeper.activePolicyProof(book.assetId);
+    const zeroHash = `0x${"0".repeat(64)}`;
+    const verified =
+      proof.proofHash.toLowerCase() === policy.proofHash.toLowerCase() &&
+      proof.versionHash !== zeroHash &&
+      proof.consumed &&
+      proof.anchoredAt > 0n &&
+      proof.anchoredAt <= proof.enactedAt;
+    return serialize({
+      code: "0000",
+      message: verified ? "active policy proof verified" : "active policy proof failed verification",
+      data: {
+        ...identity,
+        verified,
+        source: "chain",
+        chainId: keeper.cfg.chainId,
+        registry: keeper.cfg.deployments.policy,
+        record: proof,
+      },
+    });
+  } catch {
+    return {
+      code: "0000",
+      message: "active policy proof unavailable on configured registry",
+      data: {
+        ...identity,
+        verified: false,
+        source: "chain",
+        chainId: keeper.cfg.chainId,
+        registry: keeper.cfg.deployments.policy,
+      },
+    };
+  }
+});
+
 app.post("/api/skills/get_evidence", async (req, reply) => {
   const body = z.object({ version: z.number().int().min(1) }).parse(req.body ?? {});
   const pack = buildEvidence(book, body.version);

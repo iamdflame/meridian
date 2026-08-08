@@ -165,6 +165,15 @@ export class Keeper {
     return { proofTxHash, enactTxHash, proofHash: v.proofHash, versionHash: v.hash, parentHash: v.parentHash };
   }
 
+  async activePolicyProof(assetId: string) {
+    return this.pub.readContract({
+      address: this.cfg.deployments.policy,
+      abi: policyAbi,
+      functionName: "activeProof",
+      args: [assetIdOf(assetId)],
+    });
+  }
+
   /** Preflight a note transfer — returns (fromReason, toReason) from the CONTRACT's evaluator. */
   async checkTransfer(from: string, to: string): Promise<{ fromReason: number; toReason: number }> {
     const [fromReason, toReason] = await this.pub.readContract({

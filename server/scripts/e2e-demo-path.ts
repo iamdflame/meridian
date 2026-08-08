@@ -107,11 +107,20 @@ check("evidence carries verification instructions", evidence.body.verification.h
 
 // Agent Skill surface (Meridian's own ASF integration)
 const skillMd = await app.inject({ method: "GET", url: "/api/skills/skill.md" });
-check("SKILL.md served", skillMd.statusCode === 200 && skillMd.body.includes("simulate_policy"));
+check("SKILL.md served", skillMd.statusCode === 200 && skillMd.body.includes("verify_policy_proof"));
 const agentSweep = await call<{ code: string; data: { aggregates: Record<string, unknown> } }>("POST", "/api/skills/simulate_policy", { minTier: 60 });
 check("agent can simulate (never enact)", agentSweep.body.code === "0000", agentSweep.body.data.aggregates);
 const agentBook = await call<{ code: string; data: { holderCount: number } }>("POST", "/api/skills/query_book");
 check("agent can query book", agentBook.body.code === "0000" && agentBook.body.data.holderCount === 48);
+const agentProof = await call<{ code: string; data: { proofHash: string; verified: boolean; source: string } }>(
+  "POST",
+  "/api/skills/verify_policy_proof",
+);
+check(
+  "agent receives the exact active proof digest",
+  agentProof.body.code === "0000" && agentProof.body.data.proofHash === enact.body.enacted.proofHash,
+  agentProof.body.data,
+);
 
 // Reconciliation — sim vs cleanverse vs chain agree
 const rec = await call<{ rows: Array<{ agree: boolean }> }>("POST", "/api/reconcile");
