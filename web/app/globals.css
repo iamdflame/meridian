@@ -41,6 +41,37 @@
   --t-slow: 350ms;
 }
 
+/* ── light theme: token-driven, not inverted-dark ─────────────────────────── */
+[data-theme="light"] {
+  --bg-0: #f7f9fd;
+  --bg-1: #ffffff;
+  --bg-2: #eef2f9;
+  --bg-3: #e2e9f4;
+  --line-1: rgba(20, 40, 90, 0.1);
+  --line-2: rgba(20, 40, 90, 0.18);
+
+  --ink-1: #0a1120;
+  --ink-2: #435070;
+  --ink-3: #75829f;
+
+  --brand-1: #0891b2;
+  --brand-2: #0e7490;
+  --brand-glow: rgba(8, 145, 178, 0.12);
+
+  --ok-1: #059669;
+  --ok-bg: rgba(5, 150, 105, 0.1);
+  --warn-1: #b45309;
+  --warn-bg: rgba(180, 83, 9, 0.1);
+  --danger-1: #dc2626;
+  --danger-bg: rgba(220, 38, 38, 0.08);
+  --sim-1: #9333ea;
+  --sim-bg: rgba(147, 51, 234, 0.08);
+
+  --elev-1: 0 0 0 1px var(--line-1);
+  --elev-2: 0 0 0 1px var(--line-2), 0 8px 24px rgba(20, 40, 90, 0.08);
+  --elev-glow: 0 0 0 1px rgba(8, 145, 178, 0.3), 0 0 24px var(--brand-glow);
+}
+
 @theme inline {
   --color-bg-0: var(--bg-0);
   --color-bg-1: var(--bg-1);
@@ -182,4 +213,45 @@ html {
   .settle {
     animation: none !important;
   }
+}
+
+/* ── light mode — token-driven, not inverted-dark ───────────────────────────── */
+[data-theme="light"] {
+  --bg-0: #f4f6fb;
+  --bg-1: #ffffff;
+  --bg-2: #eef1f7;
+  --bg-3: #e3e8f2;
+  --line-1: rgba(20, 40, 80, 0.1);
+  --line-2: rgba(20, 40, 80, 0.18);
+  --ink-1: #0d1526;
+  --ink-2: #44536e;
+  --ink-3: #8a97b3;
+  --brand-1: #0aa8c4;
+  --brand-2: #0891b2;
+  --brand-glow: rgba(10, 168, 196, 0.14);
+  --ok-1: #16a34a;
+  --ok-bg: rgba(22, 163, 74, 0.1);
+  --warn-1: #b45309;
+  --warn-bg: rgba(217, 119, 6, 0.1);
+  --danger-1: #dc2626;
+  --danger-bg: rgba(220, 38, 38, 0.08);
+  --sim-1: #9333ea;
+  --sim-bg: rgba(147, 51, 234, 0.1);
+  --elev-1: 0 0 0 1px var(--line-1), 0 1px 2px rgba(13, 21, 38, 0.04);
+  --elev-2: 0 0 0 1px var(--line-2), 0 8px 24px rgba(13, 21, 38, 0.08);
+  --elev-glow: 0 0 0 1px rgba(10, 168, 196, 0.4), 0 0 24px var(--brand-glow);
+}
+[data-theme="light"] body {
+  background: var(--bg-0);
+  color: var(--ink-1);
+}
+[data-theme="light"] html {
+  background: var(--bg-0);
+  scrollbar-color: var(--bg-3) var(--bg-0);
+}
+[data-theme="light"] .skeleton {
+  background: linear-gradient(90deg, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%);
+}
+[data-theme="light"] ::selection {
+  background: rgba(10, 168, 196, 0.22);
 }

@@ -50,7 +50,7 @@ The TypeScript sweep engine and the Solidity transfer gate implement one semanti
 ## Quickstart (works first try, zero credentials)
 
 ```bash
-git clone https://github.com/iamdflame/clean && cd clean
+git clone https://github.com/iamdflame/meridian && cd meridian
 corepack enable && pnpm install
 
 pnpm vitest run                                   # 23 unit tests

@@ -15,7 +15,7 @@
 >
 > Submitting **Meridian** for the RWA track — mission control for verified-asset issuers: simulate any compliance-policy change against the live holder book, see the exact blast radius, enact it through Cleanverse with one signed call, and export a regulator-verifiable evidence pack.
 >
-> • Repo: https://github.com/iamdflame/clean (commit history through the build window)
+> • Repo: https://github.com/iamdflame/meridian (commit history through the build window)
 > • Demo video: [LINK]
 > • Live demo: [VERCEL URL] · Contracts on Monad testnet: see docs/deployments.md (addresses + explorer links)
 > • One-page summary: attached (also docs/one-pager.md in repo)

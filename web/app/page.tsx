@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const PRIMITIVES = [
   {
@@ -108,9 +109,10 @@ export default function Landing() {
           <a href="#story" className="transition-colors hover:text-ink-1 max-md:hidden">
             How it works
           </a>
-          <a href="https://github.com/iamdflame/clean" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink-1">
+          <a href="https://github.com/iamdflame/meridian" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink-1">
             GitHub
           </a>
+          <ThemeToggle />
           <Link
             href="/console"
             className="rounded-[10px] px-3.5 py-2 font-medium text-[#04121a] transition-transform active:scale-[0.98]"

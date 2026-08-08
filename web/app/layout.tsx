@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Mission control for verified-asset issuers on Cleanverse. Simulate any policy change against the live book, see the exact blast radius, enact it with one signed call, and export the proof.",
   openGraph: {
     title: "Meridian — Compliance that can see",
-    description: "Simulate. Enact. Prove. The operating console for verified assets.",
+    description: "Pre-enactment proofs for Cleanverse policy: what a rule will do, proven — and what it did, anchored.",
     siteName: "Meridian",
   },
 };
@@ -20,7 +20,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" data-theme="dark" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('meridian-theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-bg-0 text-ink-1">{children}</body>
     </html>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { ProvenanceChip } from "@/components/ui";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ConsoleProvider, useConsole } from "@/lib/console-context";
 
 const NAV = [
@@ -47,18 +48,21 @@ function Shell({ children }: { children: React.ReactNode }) {
             </Link>
           );
         })}
-        <div className="mt-auto flex flex-col gap-2 px-2 max-lg:hidden">
-          {book && (
-            <>
-              <div className="label">Data sources</div>
-              <ProvenanceChip source={book.mode === "server" ? (book.holders[0]?.source === "live" ? "live" : "fixture") : "demo"} />
-              <ProvenanceChip source={book.chain === "live" ? "live" : "demo"} chain />
-            </>
-          )}
-          <div className="pt-2 text-[10px] leading-relaxed text-ink-3">
-            Built on Cleanverse · Monad
-            <br />
-            Simulated panels are always labeled.
+        <div className="mt-auto flex flex-col gap-2 px-2">
+          <ThemeToggle />
+          <div className="max-lg:hidden">
+            {book && (
+              <>
+                <div className="label">Data sources</div>
+                <ProvenanceChip source={book.mode === "server" ? (book.holders[0]?.source === "live" ? "live" : "fixture") : "demo"} />
+                <ProvenanceChip source={book.chain === "live" ? "live" : "demo"} chain />
+              </>
+            )}
+            <div className="pt-2 text-[10px] leading-relaxed text-ink-3">
+              Built on Cleanverse · Monad
+              <br />
+              Simulated panels are always labeled.
+            </div>
           </div>
         </div>
       </aside>

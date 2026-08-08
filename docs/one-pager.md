@@ -1,6 +1,6 @@
 # MERIDIAN — Compliance that can see
 
-**Team:** Uniq Minds · **Track:** RWA · **Chain:** Monad testnet (10143) · **Repo:** github.com/iamdflame/clean
+**Team:** Uniq Minds · **Track:** RWA · **Chain:** Monad testnet (10143) · **Repo:** github.com/iamdflame/meridian
 
 ## Problem
 
