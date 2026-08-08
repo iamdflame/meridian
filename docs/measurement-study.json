@@ -1,0 +1,21 @@
+{
+  "measuredAt": "2026-08-08T01:17:39.786Z",
+  "methodology": "Sandbox query_chain_config token index + 48-holder book (11 live sandbox A-Pass records) swept with the 500-vector-proven differential engine",
+  "tokensIndexed": 70,
+  "chains": 7,
+  "perChain": {
+    "base": 46,
+    "ethereum": 4,
+    "polygon": 4,
+    "bsc": 4,
+    "solana": 4,
+    "hashkey": 6,
+    "monad": 2
+  },
+  "holders": 48,
+  "liveSandboxHolders": 11,
+  "policy": "deny-list KP/IR/MM",
+  "eligibleBefore": 46,
+  "strandedHolders": 6,
+  "strandedValueUsd": 151187
+}

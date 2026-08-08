@@ -12,6 +12,11 @@ fs_permissions = [
     { access = "read", path = "./test/vectors.json" },
 ]
 
+[profile.default.invariant]
+runs = 512
+depth = 200
+fail_on_revert = false
+
 [fmt]
 line_length = 120
 
