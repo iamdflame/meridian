@@ -4,7 +4,7 @@
 
 - **Team name (registered):** Uniq Minds · **Project:** Meridian · **Track:** RWA (requires BOTH CVI and CVA in core flow from issuance — we exceed this)
 - **Deadline:** Aug 9, 23:59 UTC · **Submit via email:** isaac@cleanverse.com
-- **Must include:** (1) public GitHub repo — *commit history during Aug 8–9 UTC required* → first push + Monad deploy + live-integration commits all land in-window; (2) demo video (no time limit); (3) one-page summary (below); (4) live demo URL / testnet deployment
+- **Must include:** (1) public GitHub repo — *commit history during Aug 8–9 UTC required*; permitted pre-work is preserved and the exact boundary plus in-window history is public in [`hacking-window.md`](hacking-window.md); (2) demo video (no time limit); (3) one-page summary (below); (4) live demo URL / testnet deployment
 - **Prize target:** 5,000 aUSDC (RWA 1st)
 
 ## Submission email (paste-ready — send Aug 9)
@@ -15,7 +15,7 @@
 >
 > Submitting **Meridian** for the RWA track — mission control for verified-asset issuers: simulate any compliance-policy change against the live holder book, see the exact blast radius, enact it through Cleanverse with one signed call, and export a regulator-verifiable evidence pack.
 >
-> • Repo: https://github.com/iamdflame/meridian (commit history through the build window)
+> • Repo: https://github.com/iamdflame/meridian · Window ledger: https://github.com/iamdflame/meridian/blob/main/docs/hacking-window.md
 > • Demo video: [LINK]
 > • Live demo: [VERCEL URL] · Contracts on Monad testnet: see docs/deployments.md (addresses + explorer links)
 > • One-page summary: attached (also docs/one-pager.md in repo)
@@ -80,7 +80,7 @@
 
 ## Window runbook (Aug 8, 00:00 UTC — in order)
 
-1. `git push -u origin main` (first public push lands in-window)
+1. Preserve the public pre-work baseline; publish each in-window build artifact as a separate commit. Verify the range in `docs/hacking-window.md`.
 2. Deploy Monad: `cd contracts && set -a && . ../.env && set +a && ../.toolchain/forge script script/Deploy.s.sol --rpc-url $MONAD_RPC --broadcast` → paste addresses into deployments.md → commit
 3. `node --import tsx server/scripts/sync-live-holders.ts` (once) → boot server → confirm `cooperate=LIVE chain=LIVE` → run e2e live → commit results into docs/04
 4. Vercel: `cd web && npx vercel --prod` (Root Directory: web) → link into README + one-pager
@@ -92,8 +92,8 @@
 | Registration | ✅ done (Uniq Minds — approved listing pending review) |
 | Sandbox credentials live (9/9 smoke) | ✅ |
 | Monad deployer funded (5 MON) | ✅ — deploy at window open |
-| Public repo + in-window commits | ☐ window open |
-| Contracts on Monad + deployments.md | ☐ window open |
-| Vercel URL cold-browser test | ☐ window open |
+| Public repo + in-window commits | ✅ 20 separate commits at ledger publication; public compare link in `hacking-window.md` |
+| Contracts on Monad + deployments.md | ✅ five contracts and seven successful public receipts |
+| Vercel URL cold-browser test | ✅ https://meridian-three-olive.vercel.app |
 | Demo video + ElevenLabs VO | ☐ recorded during window |
 | One-pager + submission email | ✅ drafted above — fill links, send Aug 9 |
