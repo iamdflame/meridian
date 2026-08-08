@@ -168,7 +168,7 @@ export default function StudioPage() {
               {enacting ? "Enacting…" : enacted ? "Enacted ✓" : `Enact as v${book.policies.length + 1}`}
             </Button>
             <p className="text-[10px] leading-relaxed text-ink-3">
-              Enact writes the rule through Cleanverse <span className="num">atoken/set_rule</span>, anchors the version hash on Monad, and re-verdicts every holder. Simulated writes are labeled.
+              Enact content-addresses the sweep, anchors that proof on Monad, then activates the exact rule through Cleanverse and PolicyRegistry. Simulated writes are labeled.
             </p>
           </div>
         </aside>
@@ -248,18 +248,37 @@ export default function StudioPage() {
               </div>
             )}
             {enacted && (
-              <div className="mt-1 flex flex-col gap-1.5">
-                <div className="label">Anchored</div>
-                {book.policies[book.policies.length - 1]?.versionHash ? (
-                  <HashPill hash={book.policies[book.policies.length - 1]!.versionHash!} />
-                ) : (
-                  <span className="text-[11px] text-ink-3">version hash pending chain deployment — see Evidence</span>
-                )}
-              </div>
+              <ProofSequence policy={book.policies[book.policies.length - 1]} />
             )}
           </aside>
         </div>
       )}
+    </div>
+  );
+}
+
+function ProofSequence({ policy }: { policy: NonNullable<ReturnType<typeof useConsole>["book"]>["policies"][number] | undefined }) {
+  if (!policy?.proofHash) return <span className="text-[11px] text-ink-3">proof digest unavailable</span>;
+  return (
+    <div className="mt-1 flex flex-col gap-2">
+      <div className="label">Proof before law</div>
+      <div className="flex items-center justify-between gap-2 text-[10px] text-ink-3">
+        <span>1 · sweep digest</span>
+        <HashPill hash={policy.proofHash} />
+      </div>
+      {policy.proofTx && (
+        <div className="flex items-center justify-between gap-2 text-[10px] text-ink-3">
+          <span>2 · proof anchored</span>
+          <HashPill hash={policy.proofTx} />
+        </div>
+      )}
+      {policy.enactTx && (
+        <div className="flex items-center justify-between gap-2 text-[10px] text-ink-3">
+          <span>3 · rule enacted</span>
+          <HashPill hash={policy.enactTx} />
+        </div>
+      )}
+      {!policy.proofTx && <span className="text-[10px] leading-relaxed text-ink-3">Digest is real; chain receipts are absent in labeled demo mode.</span>}
     </div>
   );
 }

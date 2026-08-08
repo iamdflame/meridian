@@ -10,10 +10,16 @@ export const registryAbi = parseAbi([
 
 export const policyAbi = parseAbi([
   "struct Rule { bytes2 group; bytes2 subGroup; uint8 minTier; uint8 minSubTier; bytes2[] countries; bool isBlackList; bool active; }",
-  "function enact(bytes32 assetId, Rule rule, string memo) returns (bytes32)",
+  "struct ProofRecord { bytes32 proofHash; bytes32 ruleHash; bytes32 versionHash; bytes32 parentHash; uint64 affectedHolderCount; uint64 anchoredAt; uint64 enactedAt; uint256 strandedValue; bool consumed; }",
+  "function anchorProof(bytes32 assetId, Rule rule, bytes32 proofHash, uint64 affectedHolderCount, uint256 strandedValue)",
+  "function enact(bytes32 assetId, Rule rule, string memo, bytes32 proofHash) returns (bytes32)",
   "function versionCount(bytes32 assetId) view returns (uint256)",
-  "function versionAt(bytes32 assetId, uint256 i) view returns ((bytes32 hash, bytes32 parentHash, uint64 enactedAt, string memo))",
-  "event PolicyEnacted(bytes32 indexed assetId, bytes32 indexed versionHash, bytes32 parentHash, string memo)",
+  "function versionAt(bytes32 assetId, uint256 i) view returns ((bytes32 hash, bytes32 parentHash, bytes32 proofHash, uint64 enactedAt, string memo))",
+  "function proofByHash(bytes32 assetId, bytes32 proofHash) view returns (ProofRecord)",
+  "function proofAt(bytes32 assetId, uint256 version) view returns (ProofRecord)",
+  "function activeProof(bytes32 assetId) view returns (ProofRecord)",
+  "event ProofAnchored(bytes32 indexed assetId, bytes32 indexed proofHash, bytes32 indexed ruleHash, bytes32 parentHash, uint64 affectedHolderCount, uint256 strandedValue)",
+  "event PolicyEnacted(bytes32 indexed assetId, bytes32 indexed versionHash, bytes32 indexed proofHash, bytes32 parentHash, string memo)",
 ]);
 
 export const noteAbi = parseAbi([

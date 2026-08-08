@@ -129,27 +129,40 @@ export class Keeper {
     });
   }
 
-  /** Anchor a policy version on-chain; returns { txHash, versionHash, parentHash }. */
-  async enactPolicy(assetId: string, rule: SimRule, memo: string): Promise<{ txHash: Hex; versionHash: Hex; parentHash: Hex }> {
-    const txHash = await this.write({
+  /** Anchor the public sweep proof, then enact the exact rule it measured. */
+  async enactPolicy(
+    assetId: string,
+    rule: SimRule,
+    memo: string,
+    proof: { hash: Hex; affectedHolderCount: number; strandedValue: bigint },
+  ): Promise<{ proofTxHash: Hex; enactTxHash: Hex; proofHash: Hex; versionHash: Hex; parentHash: Hex }> {
+    const chainAssetId = assetIdOf(assetId);
+    const ruleStruct = toRuleStruct(rule);
+    const proofTxHash = await this.write({
+      address: this.cfg.deployments.policy,
+      abi: policyAbi,
+      functionName: "anchorProof",
+      args: [chainAssetId, ruleStruct, proof.hash, BigInt(proof.affectedHolderCount), proof.strandedValue],
+    });
+    const enactTxHash = await this.write({
       address: this.cfg.deployments.policy,
       abi: policyAbi,
       functionName: "enact",
-      args: [assetIdOf(assetId), toRuleStruct(rule), memo],
+      args: [chainAssetId, ruleStruct, memo, proof.hash],
     });
     const count = await this.pub.readContract({
       address: this.cfg.deployments.policy,
       abi: policyAbi,
       functionName: "versionCount",
-      args: [assetIdOf(assetId)],
+      args: [chainAssetId],
     });
     const v = await this.pub.readContract({
       address: this.cfg.deployments.policy,
       abi: policyAbi,
       functionName: "versionAt",
-      args: [assetIdOf(assetId), count - 1n],
+      args: [chainAssetId, count - 1n],
     });
-    return { txHash, versionHash: v.hash, parentHash: v.parentHash };
+    return { proofTxHash, enactTxHash, proofHash: v.proofHash, versionHash: v.hash, parentHash: v.parentHash };
   }
 
   /** Preflight a note transfer — returns (fromReason, toReason) from the CONTRACT's evaluator. */

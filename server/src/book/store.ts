@@ -17,9 +17,11 @@ export interface PolicyVersion {
   memo: string;
   enactedAt: number;
   /** on-chain anchor */
+  proofHash?: string;
+  proofTx?: string;
+  enactTx?: string;
   versionHash?: string;
   parentHash?: string;
-  anchorTx?: string;
   /** cleanverse write evidence */
   cleanverse: { source: "live" | "fixture"; txHash?: string };
 }

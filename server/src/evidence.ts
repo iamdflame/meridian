@@ -12,9 +12,11 @@ export interface EvidencePack {
     enactedAt: number;
     cleanverseWrite: PolicyVersion["cleanverse"];
     onchainAnchor: {
+      proofHash?: string;
+      proofTxHash?: string;
+      enactTxHash?: string;
       versionHash?: string;
       parentHash?: string;
-      txHash?: string;
     };
   };
   /** the differential sweep captured at enactment — the blast radius as enacted */
@@ -68,9 +70,11 @@ export function buildEvidence(book: BookStore, version: number): EvidencePack | 
       enactedAt: policy.enactedAt,
       cleanverseWrite: policy.cleanverse,
       onchainAnchor: {
+        ...(policy.proofHash !== undefined ? { proofHash: policy.proofHash } : {}),
+        ...(policy.proofTx !== undefined ? { proofTxHash: policy.proofTx } : {}),
+        ...(policy.enactTx !== undefined ? { enactTxHash: policy.enactTx } : {}),
         ...(policy.versionHash !== undefined ? { versionHash: policy.versionHash } : {}),
         ...(policy.parentHash !== undefined ? { parentHash: policy.parentHash } : {}),
-        ...(policy.anchorTx !== undefined ? { txHash: policy.anchorTx } : {}),
       },
     },
     ...(sweep ? { sweepAtEnactment: sweep } : {}),
@@ -100,7 +104,9 @@ export function buildEvidence(book: BookStore, version: number): EvidencePack | 
     verification: {
       note: "Every on-chain hash in this pack is independently verifiable.",
       how: [
-        "PolicyRegistry.versionAt(assetId, n) returns (hash, parentHash, enactedAt, memo); recompute keccak256(parent ‖ assetId ‖ encodedRule ‖ timestamp) to verify the chain.",
+        "Recompute proofHash as keccak256 of sweepAtEnactment encoded as canonical JSON (object keys sorted recursively).",
+        "PolicyRegistry.proofAt(assetId, n) returns the proof digest, impact metrics, rule hash, and parent lineage anchored before enactment.",
+        "PolicyRegistry.versionAt(assetId, n) returns (hash, parentHash, proofHash, enactedAt, memo); recompute keccak256(parent ‖ assetId ‖ encodedRule ‖ proofHash ‖ timestamp) to verify the chain.",
         "VerifiedAssetToken.checkTransfer(from, to) reproduces any eligibility verdict in this pack from public state.",
         "DistributionEngine.legAt(runId, i) returns each leg's state and refusal reason on-chain.",
         "Cleanverse writes marked live carry sandbox API evidence; writes marked fixture are honestly labeled simulations.",

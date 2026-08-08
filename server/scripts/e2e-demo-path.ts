@@ -55,8 +55,12 @@ if (!alreadyV2) {
 }
 
 // ENACT
-const enact = await call<{ enacted: { version: number; cleanverse: { source: string } }; sweep: { aggregates: Record<string, unknown> } }>("POST", "/api/enact", draft);
+const enact = await call<{
+  enacted: { version: number; proofHash: string; cleanverse: { source: string } };
+  sweep: { aggregates: Record<string, unknown> };
+}>("POST", "/api/enact", draft);
 check("enact v2 succeeds", enact.status === 200 && enact.body.enacted.version === 2, enact.body.enacted);
+check("enact publishes the sweep proof digest", /^0x[0-9a-f]{64}$/.test(enact.body.enacted.proofHash), enact.body.enacted.proofHash);
 
 // The SAME transfer now refuses, with a legible reason
 const after = await call<{ ok: boolean; reasonLabel?: string }>("POST", "/api/prove-transfer", { fromIndex: okIdx, toIndex: strandedIdx });
@@ -97,6 +101,7 @@ const evidence = await call<{
   verification: { how: string[] };
 }>("GET", "/api/evidence/2");
 check("evidence pack exists for v2", evidence.status === 200 && evidence.body.policy.version === 2);
+check("evidence carries the enacted proof digest", evidence.body.policy.onchainAnchor.proofHash === enact.body.enacted.proofHash);
 check("evidence lists affected holders", evidence.body.holdersAffected.length > 0, { affected: evidence.body.holdersAffected.length });
 check("evidence carries verification instructions", evidence.body.verification.how.length >= 3);
 

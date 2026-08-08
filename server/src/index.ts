@@ -5,7 +5,7 @@ import { z } from "zod";
 import { CooperateClient, fromEnv, VerifyCode } from "@meridian/cleanverse";
 import { BookStore } from "./book/store.js";
 import { seedBook } from "./book/seed.js";
-import { sweep } from "./sim/sweep.js";
+import { hashSweepProof, sweep } from "./sim/sweep.js";
 import { Reason, REASON_LABEL, evaluate, type SimRule } from "@meridian/sim";
 import { buildEvidence, recordEnactmentSweep } from "./evidence.js";
 import { Keeper, type Deployments } from "./chain/keeper.js";
@@ -105,6 +105,7 @@ app.post("/api/enact", async (req, reply) => {
   const body = z.object({ memo: z.string().min(1).max(200) }).passthrough().parse(req.body ?? {});
   const draft = draftFrom(req.body);
   const result = sweep(book, draft);
+  const proofHash = hashSweepProof(result);
   const version = (book.activePolicy()?.version ?? 0) + 1;
 
   // 1) Cleanverse write — the real rule surface. Shared-tenant safety: the sandbox
@@ -124,9 +125,13 @@ app.post("/api/enact", async (req, reply) => {
   }
 
   // 2) On-chain anchor (when chain is wired).
-  let anchor: { txHash?: string; versionHash?: string; parentHash?: string } = {};
+  let anchor: { proofTxHash?: string; enactTxHash?: string; versionHash?: string; parentHash?: string } = {};
   if (keeper) {
-    const res = await keeper.enactPolicy(book.assetId, draft, `v${version}: ${body.memo}`);
+    const res = await keeper.enactPolicy(book.assetId, draft, `v${version}: ${body.memo}`, {
+      hash: proofHash,
+      affectedHolderCount: result.aggregates.newlyIneligible + result.aggregates.newlyEligible,
+      strandedValue: BigInt(result.aggregates.strandedValue),
+    });
     anchor = res;
   }
 
@@ -135,14 +140,23 @@ app.post("/api/enact", async (req, reply) => {
     rule: draft,
     memo: body.memo,
     enactedAt: Math.floor(Date.now() / 1000),
+    proofHash,
     ...(anchor.versionHash !== undefined ? { versionHash: anchor.versionHash } : {}),
     ...(anchor.parentHash !== undefined ? { parentHash: anchor.parentHash } : {}),
-    ...(anchor.txHash !== undefined ? { anchorTx: anchor.txHash } : {}),
+    ...(anchor.proofTxHash !== undefined ? { proofTx: anchor.proofTxHash } : {}),
+    ...(anchor.enactTxHash !== undefined ? { enactTx: anchor.enactTxHash } : {}),
     cleanverse: { source: cv.source, ...(cv.data?.txHash !== undefined ? { txHash: cv.data.txHash } : {}) },
   };
   book.policies.push(policyVersion);
   recordEnactmentSweep(version, result);
-  book.log("enact", { version, memo: body.memo, cleanverse: cv.source, anchor: anchor.txHash ?? "none" });
+  book.log("enact", {
+    version,
+    memo: body.memo,
+    proofHash,
+    cleanverse: cv.source,
+    proofTx: anchor.proofTxHash ?? "none",
+    enactTx: anchor.enactTxHash ?? "none",
+  });
 
   return serialize({ enacted: policyVersion, sweep: result });
 });

@@ -1,4 +1,5 @@
-import { Reason, evaluate, type SimRule } from "@meridian/sim";
+import { Reason, evaluate, hashProofPayload, type SimRule } from "@meridian/sim";
+import type { Hex } from "viem";
 import type { BookStore } from "../book/store.js";
 
 export interface HolderImpact {
@@ -31,6 +32,11 @@ export interface SweepResult {
     strandedPendingValue: string;
     reasonsAfter: Record<string, number>;
   };
+}
+
+/** Content address for the exact public sweep captured before enactment. */
+export function hashSweepProof(result: SweepResult): Hex {
+  return hashProofPayload(result);
 }
 
 /**

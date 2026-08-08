@@ -26,7 +26,21 @@ export default function EvidencePage() {
     );
   }
 
-  const policy = pack?.policy as { version: number; memo: string; rule: Record<string, unknown>; cleanverseWrite?: { source: string; txHash?: string }; onchainAnchor?: { versionHash?: string; parentHash?: string; txHash?: string } } | undefined;
+  const policy = pack?.policy as
+    | {
+        version: number;
+        memo: string;
+        rule: Record<string, unknown>;
+        cleanverseWrite?: { source: string; txHash?: string };
+        onchainAnchor?: {
+          proofHash?: string;
+          proofTxHash?: string;
+          enactTxHash?: string;
+          versionHash?: string;
+          parentHash?: string;
+        };
+      }
+    | undefined;
   const affected = (pack?.holdersAffected as Array<Record<string, unknown>>) ?? [];
   const trail = (pack?.auditTrail as Array<{ at: number; kind: string; detail: Record<string, unknown> }>) ?? [];
   const how = (pack?.verification as { how?: string[] })?.how ?? [];
@@ -71,18 +85,35 @@ export default function EvidencePage() {
                 {JSON.stringify(policy.rule, null, 2)}
               </pre>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="label">Anchor</span>
-                {policy.onchainAnchor?.versionHash ? (
+                <span className="label">Pre-enactment proof</span>
+                {policy.onchainAnchor?.proofHash ? (
                   <>
-                    <HashPill hash={policy.onchainAnchor.versionHash} />
-                    <span className="text-[10px] text-ink-3">parent</span>
-                    <HashPill hash={policy.onchainAnchor.parentHash ?? "0x0"} />
-                    {policy.onchainAnchor.txHash && <HashPill hash={policy.onchainAnchor.txHash} />}
+                    <HashPill hash={policy.onchainAnchor.proofHash} />
+                    {policy.onchainAnchor.proofTxHash && (
+                      <>
+                        <span className="text-[10px] text-ink-3">proof tx</span>
+                        <HashPill hash={policy.onchainAnchor.proofTxHash} />
+                      </>
+                    )}
+                    {policy.onchainAnchor.enactTxHash && (
+                      <>
+                        <span className="text-[10px] text-ink-3">enact tx</span>
+                        <HashPill hash={policy.onchainAnchor.enactTxHash} />
+                      </>
+                    )}
                   </>
                 ) : (
-                  <span className="text-[11px] text-ink-3">no chain anchor — demo/fixture mode (labeled, never faked)</span>
+                  <span className="text-[11px] text-ink-3">no proof digest for this version</span>
                 )}
               </div>
+              {policy.onchainAnchor?.versionHash && (
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="label">Policy lineage</span>
+                  <HashPill hash={policy.onchainAnchor.versionHash} />
+                  <span className="text-[10px] text-ink-3">parent</span>
+                  <HashPill hash={policy.onchainAnchor.parentHash ?? "0x0"} />
+                </div>
+              )}
               <div>
                 <div className="label mb-2">Verify it yourself</div>
                 <ol className="flex list-decimal flex-col gap-1.5 pl-4 text-[12px] leading-relaxed text-ink-2">

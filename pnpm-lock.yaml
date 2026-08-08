@@ -32,7 +32,11 @@ importers:
 
   packages/cleanverse: {}
 
-  packages/sim: {}
+  packages/sim:
+    dependencies:
+      viem:
+        specifier: ^2.55.11
+        version: 2.55.11(typescript@5.9.3)(zod@3.25.76)
 
   server:
     dependencies:

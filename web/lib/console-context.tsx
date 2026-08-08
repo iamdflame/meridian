@@ -121,18 +121,29 @@ export function ConsoleProvider({ children }: { children: React.ReactNode }) {
         const d = demoEngine();
         const p = d.policies.find((x) => x.version === version);
         if (!p) return undefined;
+        const sweepAtEnactment = d.enactmentSweeps.get(version);
         return {
           product: "meridian",
           assetId: d.assetId,
           generatedAt: Date.now(),
-          policy: { version: p.version, memo: p.memo, rule: p.rule, enactedAt: p.enactedAt, cleanverseWrite: p.cleanverse, onchainAnchor: {} },
-          holdersAffected: [],
+          policy: {
+            version: p.version,
+            memo: p.memo,
+            rule: p.rule,
+            enactedAt: p.enactedAt,
+            cleanverseWrite: p.cleanverse,
+            onchainAnchor: { ...(p.proofHash !== undefined ? { proofHash: p.proofHash } : {}) },
+          },
+          ...(sweepAtEnactment ? { sweepAtEnactment } : {}),
+          holdersAffected: (sweepAtEnactment?.holders ?? []).filter((holder) => holder.becameIneligible || holder.becameEligible),
           distributions: d.distributions.map((run) => ({ runId: run.id, memo: run.memo, legs: run.legs })),
           auditTrail: d.events,
           verification: {
-            note: "Demo mode — deploy the full stack for on-chain anchors.",
+            note: "Demo mode computes the exact public digest; proof and enact receipts require the live chain deployment.",
             how: [
-              "PolicyRegistry.versionAt(assetId, n) verifies the hash chain on the live deployment.",
+              "Recompute proofHash as keccak256 of sweepAtEnactment encoded as canonical JSON (object keys sorted recursively).",
+              "PolicyRegistry.proofAt(assetId, n) exposes the public proof and impact metrics on the live deployment.",
+              "PolicyRegistry.versionAt(assetId, n) binds the proof hash into the policy lineage.",
               "VerifiedAssetToken.checkTransfer(from, to) reproduces any verdict from public state.",
               "DistributionEngine.legAt(runId, i) returns each leg's state and reason on-chain.",
             ],

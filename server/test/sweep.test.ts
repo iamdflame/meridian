@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { CooperateClient } from "@meridian/cleanverse";
 import { BookStore } from "../src/book/store.js";
 import { seedBook } from "../src/book/seed.js";
-import { sweep } from "../src/sim/sweep.js";
+import { hashSweepProof, sweep } from "../src/sim/sweep.js";
 import { Reason } from "@meridian/sim";
 
 const book = new BookStore();
@@ -76,5 +76,18 @@ describe("differential sweep", () => {
     for (const h of r.holders) {
       if (h.after === Reason.None) expect(h.country).toBe("SG");
     }
+  });
+
+  it("content-addresses the exact sweep independent of object key order", () => {
+    const result = sweep(book, { ...book.activePolicy()!.rule, minTier: 60 }, 1_800_000_000);
+    const reordered = {
+      ...result,
+      aggregates: {
+        ...result.aggregates,
+        reasonsAfter: Object.fromEntries(Object.entries(result.aggregates.reasonsAfter).reverse()),
+      },
+    };
+    expect(hashSweepProof(reordered)).toBe(hashSweepProof(result));
+    expect(hashSweepProof({ ...result, at: result.at + 1 })).not.toBe(hashSweepProof(result));
   });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { Reason, REASON_LABEL, evaluate, type SimHolder, type SimRule } from "@meridian/sim";
+import { Reason, REASON_LABEL, evaluate, hashProofPayload, type SimHolder, type SimRule } from "@meridian/sim";
 import demoBook from "./demo-book.json";
 
 export { Reason, REASON_LABEL };
@@ -22,9 +22,11 @@ export interface Policy {
   rule: SimRule;
   memo: string;
   enactedAt: number;
+  proofHash?: string;
+  proofTx?: string;
+  enactTx?: string;
   versionHash?: string;
   parentHash?: string;
-  anchorTx?: string;
   cleanverse: { source: Provenance; txHash?: string };
 }
 
@@ -58,6 +60,9 @@ export interface HolderImpact {
 }
 
 export interface SweepOutcome {
+  assetId: string;
+  at: number;
+  baselineVersion: number;
   draft: SimRule;
   holders: HolderImpact[];
   aggregates: {
@@ -99,6 +104,7 @@ class DemoEngine {
   policies: Policy[];
   distributions: Run[];
   events: AuditEvent[] = [];
+  enactmentSweeps = new Map<number, SweepOutcome>();
   assetId = demoBook.assetId;
 
   constructor() {
@@ -179,6 +185,9 @@ class DemoEngine {
       }
     this.log("sweep", { newlyIneligible });
     return {
+      assetId: this.assetId,
+      at: t,
+      baselineVersion: this.policies.length,
       draft,
       holders,
       aggregates: {
@@ -197,16 +206,19 @@ class DemoEngine {
 
   enact(draft: SimRule, memo: string): Policy {
     const version = this.policies.length + 1;
+    const proof = this.sweep(draft);
     const policy: Policy = {
       version,
       rule: draft,
       memo,
       enactedAt: this.now(),
+      proofHash: hashProofPayload(proof),
       cleanverse: { source: "demo" },
     };
     this.policies.push(policy);
+    this.enactmentSweeps.set(version, proof);
     this.reverdict();
-    this.log("enact", { version, memo, source: "demo" });
+    this.log("enact", { version, memo, proofHash: policy.proofHash, source: "demo" });
     return policy;
   }
 
