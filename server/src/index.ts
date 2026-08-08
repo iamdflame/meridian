@@ -343,18 +343,11 @@ app.post("/api/distributions/:id/release/:leg", async (req, reply) => {
 // ---- reconciliation (the honesty proof) ---------------------------------------------------
 app.post("/api/reconcile", async () => {
   const sample = book.list().slice(0, 8);
-  const rule = book.activePolicy()?.rule;
-  const now = Math.floor(Date.now() / 1000);
   const rows = [];
-  const CREDENTIAL_REASONS = [Reason.NotRegistered, Reason.CredentialFrozen, Reason.CredentialExpired];
   // Reconcile sim↔chain on the *credential layer only*: the on-chain registry was
   // synced from the book at boot (a policy demo may have evolved it since), while
   // verify_apass reads the live sandbox credential store.
   for (const h of sample) {
-    const simCred = h.status === 1 ? Reason.None : Reason.CredentialFrozen;
-    if (h.expiry < now) {
-      // expired — sim says expired regardless of policy
-    }
     const cv = await cooperate.verifyApass({ chain: "monad", atoken: "0xaC0893567D43C3E7e6e35a72803df05416C1f20D", address: h.wallet });
     let chainCred: number | undefined;
     if (keeper) {

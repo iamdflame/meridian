@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.32.1",
   "scripts": {
     "lint": "eslint packages server web --ext .ts,.tsx",
-    "typecheck": "pnpm -r --filter '!web' exec tsc --noEmit && pnpm --filter web exec tsc --noEmit",
+    "typecheck": "pnpm --filter @meridian/cleanverse --filter @meridian/sim --filter @meridian/server --filter web exec tsc --noEmit",
     "test": "vitest run",
     "test:contracts": "cd contracts && forge test -vv",
     "dev:server": "pnpm --filter @meridian/server dev",

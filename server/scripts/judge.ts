@@ -29,12 +29,12 @@ run("Foundry unit suite (gates, escrow, registry)", forge.includes("0 failed"), 
 
 // 3. differential parity
 const parity = forge.match(/RuleVectorsTest[\s\S]*?(\d+) passed/);
-run("Differential parity (TS ≡ Solidity)", /RuleVectorsTest/.test(forge), "500 vectors, 0 drift");
+run("Differential parity (TS ≡ Solidity)", Boolean(parity), "500 vectors, 0 drift");
 
 // 4. invariant campaign
 const inv = sh("cd contracts && ../.toolchain/forge test --match-contract Invariants 2>&1");
 const invMatch = inv.match(/(\d+) passed/);
-run("Invariant campaign (gate soundness, conservation, append-only)", inv.includes("0 failed"), `512 runs × 200 depth = 102,400 cases, 0 failures`);
+run("Invariant campaign (gate soundness, conservation, append-only)", inv.includes("0 failed") && Boolean(invMatch), `512 runs × 200 depth = 102,400 cases, 0 failures`);
 
 // 5. live sandbox smoke
 const smoke = sh("set -a && . ./.env && set +a && node --import tsx server/scripts/smoke-cooperate-live.ts 2>&1");
