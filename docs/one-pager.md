@@ -12,7 +12,7 @@ Jurisdiction and eligibility rules are the #1 institutional blocker for tokenize
 
 **ENACT.** One signed call writes the rule through the Cleanverse API, anchors the policy version in an on-chain hash chain, and flips live transfer behavior at the token layer: the same transfer that settled a moment ago is refused with the exact rule that blocked it.
 
-**PROVE.** An exportable evidence pack — policy hash chain, affected-holder ledger, Travel Rule references per settlement — verifiable hash-by-hash from public state. Stranded coupon legs suspend into on-chain escrow (*money caught, not lost*) and release only when eligibility is re-proven on-chain.
+**PROVE.** The exact sweep digest is anchored before enactment and exposed through the permissionless `IPreEnactmentProof` interface. Issuers, protocol contracts, holders, and agents consume the same active proof. The exportable evidence pack adds the policy hash chain, affected-holder ledger, and Travel Rule references. Stranded coupon legs suspend into on-chain escrow (*money caught, not lost*) and release only when eligibility is re-proven on-chain.
 
 ## CVI · CVA integration points (verified live against the sandbox)
 
@@ -24,8 +24,8 @@ Jurisdiction and eligibility rules are the #1 institutional blocker for tokenize
 
 ## Deployed chains & demo
 
-Monad testnet: `EligibilityRegistry` (attested A-Pass mirror), `PolicyRegistry` (hash-chain anchor), `VerifiedAssetToken` (live-read gate, legible refusal reasons), `DistributionEngine` (suspense escrow) — addresses in `docs/deployments.md`. Console (Next.js) on Vercel with per-panel provenance chips: LIVE·SANDBOX / LIVE·MONAD / SIMULATED — honesty is architectural.
+Monad testnet: `EligibilityRegistry`, proof-gated `PolicyRegistry`, `VerifiedAssetToken`, `SettlementToken`, and `DistributionEngine` — five contracts and eight successful receipts in `docs/deployments.md`. Live console: https://meridian-three-olive.vercel.app · holder verifier: https://meridian-three-olive.vercel.app/verify. Per-panel provenance chips distinguish LIVE·SANDBOX / LIVE·MONAD / SIMULATED.
 
 ## Evidence
 
-23 unit tests · 22 Foundry tests · 500/500 TS↔Solidity differential vectors · 20/20 e2e demo-path checks (fixture **and** live-chain modes) · 9/9 live Cooperate API smoke · zero console errors on the happy path. Reproduce from a fresh clone with zero credentials: `pnpm install && pnpm vitest run && node --import tsx server/scripts/e2e-demo-path.ts`.
+24 unit tests · 37 Foundry tests · 500/500 TS↔Solidity differential vectors · 102,400 calls per invariant · 24/24 e2e demo-path checks (fixture **and** live-chain modes) · 9/9 live Cooperate API smoke · 9/9 self-audit surfaces · zero console errors at desktop and mobile widths. Reproduce from a fresh clone with zero credentials: `pnpm install && pnpm judge`.

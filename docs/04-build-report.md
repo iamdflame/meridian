@@ -7,11 +7,11 @@
 | Suite | Command | Result |
 |---|---|---|
 | Cleanverse client (AES round-trip, envelope, fixture lifecycle: generate→verify→freeze→blocked→reactivate, expired-as-blocked, rules, validator) | `pnpm vitest run packages/cleanverse` | **11/11 PASS** |
-| Sim engine + seeded book (determinism, blast-radius exactness, stranded-value totals, pending-leg flagging, allow-list mode) | `pnpm vitest run server` | **12/12 PASS** |
-| Contracts (eligibility matrix incl. every refusal reason, expiry boundary `>=` semantics, policy-flip beat, live-not-latched freeze, identity monotonicity, hash-chain links, suspend→release with escrow invariant, pagination idempotence, role separation) | `forge test` | **22/22 PASS** |
+| Sim engine + seeded book (determinism, blast-radius exactness, stranded-value totals, pending-leg flagging, allow-list mode, canonical proof digest) | `pnpm vitest run server` | **13/13 PASS** |
+| Contracts (proof required before enactment, public proof consumer, eligibility matrix incl. every refusal reason, expiry boundary `>=` semantics, policy-flip beat, live-not-latched freeze, identity monotonicity, hash-chain links, suspend→release with escrow invariant, pagination idempotence, role separation) | `forge test` | **37/37 PASS** |
 | **Differential parity** — 500 seeded vectors, TS `evaluate` vs Solidity `RuleV2Lib.evaluate`, all 10 reason codes represented (dist: 27/24/47/70/102/79/65/53/11/22) | `forge test --match-contract RuleVectorsTest` | **500/500 AGREE** |
-| Headless demo-path e2e — fixture mode (no chain, no credentials) | `node --import tsx server/scripts/e2e-demo-path.ts` | **20/20 checks PASS** |
-| Headless demo-path e2e — **full live chain** (anvil): deploy → attest 48 → fund → mint → prove-transfer passes v1 → enact v2 (real txs) → same transfer **reverts with `TransferIneligible(IneligibleCountry)`** → coupon run pays 6 / suspends 6 → release refused on-chain (409) → remediate → release succeeds → evidence pack → skill surface → reconciliation | one-command repro in [deployments.md](deployments.md) | **20/20 checks PASS** |
+| Headless demo-path e2e — fixture mode (no chain, no credentials) | `node --import tsx server/scripts/e2e-demo-path.ts` | **24/24 checks PASS** |
+| Headless demo-path e2e — **full live chain** (anvil): deploy → attest 48 → fund → mint → prove-transfer passes v1 → anchor exact sweep proof → enact v2 (real txs) → same transfer **reverts with `TransferIneligible(IneligibleCountry)`** → coupon run pays 6 / suspends 6 → release refused on-chain (409) → remediate → release succeeds → evidence pack → agent verifies exact active proof → reconciliation | one-command repro in [deployments.md](deployments.md) | **24/24 checks PASS** |
 
 ## Live integrations verified (no credentials required)
 
@@ -33,5 +33,5 @@
 
 ## Deviations from plan
 
-- Monad testnet deployment pending faucet (HUMAN ACTION #2 in [deployments.md](deployments.md)); the identical deploy path is verified against anvil (chain-agnostic bytecode, same scripts)
-- Cooperate live mode pending registration keys (HUMAN ACTION #1); every call site already routes live-first
+- No proof-surface deviations remain: the proof-gated primitive is live on Monad testnet with eight successful public receipts, and the current full-chain path passes against a fresh Anvil deployment.
+- The shared Cleanverse tenant is treated conservatively: 9/9 credentialed Cooperate calls are publicly receipted, while bulk demo rows remain deterministic, labeled fixtures rather than destructive shared-tenant writes.

@@ -50,7 +50,7 @@ const smokeOk = runLiveSmoke ? smoke.includes("GREEN") : liveReceipt?.result ===
 run("Live Cooperate sandbox smoke", smokeOk, runLiveSmoke ? `${smoke.match(/(\d+\/\d+)/)?.[1] ?? "—"} live` : "9/9 public receipt");
 
 // 6. live skills (no auth)
-const skillsSmoke = sh("node --import tsx packages/cleanverse/scripts/smoke-skills.ts 2>&1");
+const skillsSmoke = sh("node --import tsx packages/cleanverse/scripts/smoke-skills.ts 2>&1", { ...process.env, MERIDIAN_SKILLS_RECORD: "0" });
 run("Live Skills API (public)", skillsSmoke.includes("code=0000"), "chain config + magiclink + institutions live");
 
 // 7. measured study
@@ -59,13 +59,17 @@ run("Measured real-chain study", Boolean(study), study ? `${study.tokensIndexed}
 
 // 8. deployments
 const dep = existsSync("contracts/deployments/10143.json") ? JSON.parse(readFileSync("contracts/deployments/10143.json", "utf8")) : null;
-run("Deployed on Monad testnet (10143)", Boolean(dep?.registry), dep ? `7 receipts · blocks ${dep.receiptBlockRange.first}–${dep.receiptBlockRange.last}` : "missing");
+const deploymentAddresses = dep ? [dep.registry, dep.policy, dep.note, dep.cash, dep.engine] : [];
+const deploymentOk = dep?.chainId === 10143 && deploymentAddresses.every((address) => /^0x[0-9a-fA-F]{40}$/.test(address));
+run("Deployed on Monad testnet (10143)", deploymentOk, dep ? `${deploymentAddresses.length} contracts · block ${dep.deployBlock}` : "missing");
 
 // 9. e2e demo path
 const fixtureEnv: NodeJS.ProcessEnv = { ...process.env, MERIDIAN_ALLOW_FIXTURES: "1" };
 for (const key of ["CLEANVERSE_API_ID", "CLEANVERSE_APP_KEY", "DEPLOYER_KEY", "MERIDIAN_ATOKEN", "MONAD_CHAIN_ID", "MONAD_RPC"]) delete fixtureEnv[key];
 const e2e = sh("node --import tsx server/scripts/e2e-demo-path.ts 2>&1", fixtureEnv);
-run("End-to-end demo path", e2e.includes("ALL GREEN"), "20/20 checks");
+const e2eChecks = e2e.match(/^✓/gm)?.length ?? 0;
+const e2eExpected = readFileSync("server/scripts/e2e-demo-path.ts", "utf8").match(/^\s*check\(/gm)?.length ?? 0;
+run("End-to-end demo path", e2e.includes("ALL GREEN") && e2eChecks === e2eExpected, `${e2eChecks}/${e2eExpected} checks`);
 
 const passed = checks.filter((c) => c.ok).length;
 console.log();

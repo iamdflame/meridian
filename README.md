@@ -57,8 +57,8 @@ The TypeScript sweep engine and the Solidity transfer gate implement one semanti
 git clone https://github.com/iamdflame/meridian && cd meridian
 corepack enable && pnpm install
 
-pnpm vitest run                                   # 23 unit tests
-node --import tsx server/scripts/e2e-demo-path.ts # full demo path, 20 checks — fixture mode
+pnpm vitest run                                   # 24 unit tests
+node --import tsx server/scripts/e2e-demo-path.ts # full demo path, 24 checks — fixture mode
 
 # contracts (Foundry): install per https://getfoundry.sh, then
 curl -sL -o .toolchain/solc-0.8.28 https://binaries.soliditylang.org/linux-amd64/solc-linux-amd64-v0.8.28+commit.7893614a && chmod +x .toolchain/solc-0.8.28
@@ -70,7 +70,7 @@ cd contracts && DEPLOYER_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efca
   forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
 cd .. && MONAD_CHAIN_ID=31337 MONAD_RPC=http://127.0.0.1:8545 \
   DEPLOYER_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
-  node --import tsx server/scripts/e2e-demo-path.ts   # 20/20 with real txs
+  node --import tsx server/scripts/e2e-demo-path.ts   # 24/24 with real txs
 
 # the console
 node --import tsx server/src/index.ts &   # optional — the web app runs standalone in labeled demo mode without it
@@ -81,10 +81,10 @@ With hackathon credentials in `.env` (see `.env.example`), the same code paths r
 
 ## Verified results
 
-- **23** unit tests (client AES + lifecycle, sweep engine, seed determinism)
-- **22** Foundry tests (eligibility matrix, policy-flip beat, escrow invariants, identity monotonicity, role separation)
+- **24** unit tests (client AES + lifecycle, sweep engine, seed determinism)
+- **37** Foundry tests (proof-gated enactment, public consumer, eligibility matrix, policy flip, escrow invariants, identity monotonicity, role separation)
 - **500/500** TS↔Solidity differential vectors agree
-- **20/20** e2e demo-path checks — in fixture mode *and* full-live-chain mode (real deploy, real reverts with decoded reasons, real escrow release)
+- **24/24** e2e demo-path checks — in fixture mode *and* full-live-chain mode (real deploy, proof anchor, real reverts with decoded reasons, real escrow release, agent proof verification)
 - Live sandbox calls verified today, no credentials needed: `query_chain_config` (Monad 10143, aUSDC `0xaC08…f20D`), `get_magiclink`, `query_deposit_institutions` (Anchorage Digital)
 
 Details with reproduction commands: [docs/04-build-report.md](docs/04-build-report.md) · Monad testnet addresses: [docs/deployments.md](docs/deployments.md)

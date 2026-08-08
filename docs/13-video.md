@@ -27,7 +27,7 @@
 - 2:30–2:44 · Terminal: `pnpm judge` runs, scoreboard prints green. VO: "One command: a hundred and two thousand property cases, five hundred differential vectors, nine-of-nine live sandbox calls, deployed contracts. The repo audits itself."
 - 2:44–3:00 · On-screen: composition census + measured study numbers. VO: "Our conservative census names fifty-nine projects here that can consume this proof today. We measured the need: seventy tokens, seven chains, six holders stranded, one hundred fifty-one thousand dollars — before a rule ever became law."
 
-**End card (3:00–3:05):** logo, repo URL, Monad addresses (5), `pnpm judge` line, LIVE·SANDBOX chip. Silence.
+**End card (3:00–3:05):** logo, `github.com/iamdflame/meridian`, `meridian-three-olive.vercel.app/verify`, PolicyRegistry `0xe522…DED6`, proof-anchor tx `0x35cc…309d`, and `pnpm judge 9/9`. Silence.
 
 ## Shot list (split)
 
@@ -39,5 +39,5 @@
 - [ ] Render 1080p60 H.264
 - [ ] Captions on
 - [ ] Title: "Meridian — Pre-enactment Proofs for Cleanverse (RWA track)"
-- [ ] Description: repo + live URL + addresses + the mechanism sentence
+- [ ] Description: `Repo: https://github.com/iamdflame/meridian` · `Live: https://meridian-three-olive.vercel.app` · `Verify: https://meridian-three-olive.vercel.app/verify` · `Receipts: https://github.com/iamdflame/meridian/blob/main/docs/deployments.md`
 - [ ] Link in submission email

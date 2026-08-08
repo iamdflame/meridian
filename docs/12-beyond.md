@@ -4,7 +4,7 @@
 
 ## 1. The self-judging repo — `pnpm judge`
 
-One command runs the entire proof stack — 23 unit tests, 27 Foundry tests, the 500-vector TS≡Solidity differential parity, the 102,400-case invariant campaign, the 9/9 live Cooperate sandbox smoke, the live public Skills API, the measured real-chain study, the Monad deployment record, and the 20-check e2e — and prints a rubric self-assessment scoreboard. **The repo audits itself in front of the judge.**
+One command runs the entire proof stack — 24 unit tests, 37 Foundry tests, the 500-vector TS≡Solidity differential parity, the 102,400-case invariant campaign, the 9/9 live Cooperate sandbox smoke, the live public Skills API, the measured real-chain study, the Monad deployment record, and the 24-check e2e — and prints a rubric self-assessment scoreboard. **The repo audits itself in front of the judge.**
 
 > "No other entry ships a single command that re-derives its entire evidence ledger and prints its own scorecard." — true across all 155 (the report shows no self-audit harness anywhere).
 

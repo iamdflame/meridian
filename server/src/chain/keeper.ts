@@ -193,6 +193,8 @@ export class Keeper {
   async proveTransfer(fromKey: Hex, to: string, amount: bigint): Promise<{ ok: boolean; txHash?: Hex; reason?: number }> {
     const from = privateKeyToAccount(fromKey);
     try {
+      const balance = await this.pub.getBalance({ address: from.address });
+      if (balance < 10n ** 16n) await this.fundWallets([from.address], 5n * 10n ** 16n);
       const { request } = await this.pub.simulateContract({
         address: this.cfg.deployments.note,
         abi: noteAbi,
@@ -221,6 +223,7 @@ export class Keeper {
   }
 
   async createDistributionRun(assetId: string, holders: string[], amounts: bigint[], memo: string): Promise<{ txHash: Hex; runId: bigint }> {
+    await this.fundEngineCash(amounts.reduce((total, amount) => total + amount, 0n));
     const txHash = await this.write({
       address: this.cfg.deployments.engine,
       abi: engineAbi,
