@@ -83,8 +83,10 @@ export class Keeper {
     return hash;
   }
 
-  /** Push the book's credential state on-chain in one batch. */
-  async attestBook(holders: HolderRow[]): Promise<Hex> {
+  /** Push the book's credential state on-chain in one batch. Idempotent on repeat
+   *  boots: if the deployer lacks gas for a full re-attest, we read current state
+   *  and skip — the registry already mirrors these holders from the first sync. */
+  async attestBook(holders: HolderRow[]): Promise<Hex | undefined> {
     const batch = holders.map((h) => ({
       wallet: h.wallet as Address,
       cvRecordId: keccak256(toBytes(h.cvRecordId)),
@@ -96,12 +98,26 @@ export class Keeper {
       status: h.status,
       expiry: BigInt(h.expiry),
     }));
-    return this.write({
-      address: this.cfg.deployments.registry,
-      abi: registryAbi,
-      functionName: "attestBatch",
-      args: [batch],
-    });
+    try {
+      return await this.write({
+        address: this.cfg.deployments.registry,
+        abi: registryAbi,
+        functionName: "attestBatch",
+        args: [batch],
+      });
+    } catch (err) {
+      const bal = await this.pub.getBalance({ address: this.account.address });
+      if (bal < 10n ** 17n) {
+        // gas-starved on a previously-synced registry — verify the mirror exists
+        const onchain = await this.pub.readContract({
+          address: this.cfg.deployments.registry,
+          abi: registryAbi,
+          functionName: "walletCount",
+        });
+        if (onchain >= BigInt(holders.length)) return undefined; // already synced
+      }
+      throw err;
+    }
   }
 
   async setStatus(wallet: string, status: 1 | 2): Promise<Hex> {
@@ -232,11 +248,19 @@ export class Keeper {
     }
   }
 
-  /** Mint note positions to eligible holders (mint checks the to-leg only). */
+  /** Mint note positions to eligible holders (mint checks the to-leg only).
+   *  Skips holders already holding the position (idempotent on repeat boots). */
   async mintNotes(pairs: Array<{ wallet: string; amount: bigint }>): Promise<number> {
     let minted = 0;
     for (const p of pairs) {
       try {
+        const current = await this.pub.readContract({
+          address: this.cfg.deployments.note,
+          abi: noteAbi,
+          functionName: "balanceOf",
+          args: [p.wallet as Address],
+        });
+        if (current >= p.amount) continue; // already minted
         await this.write({
           address: this.cfg.deployments.note,
           abi: noteAbi,

@@ -8,9 +8,9 @@
 
 *Mission control for verified-asset issuers on Cleanverse — simulate any policy change against the live book, see the exact blast radius, enact it with one signed call, and export the proof.*
 
-**Cleanverse Build: Trusted Assets Hackathon · RWA Track · Built on Monad**
+**Cleanverse Build: Trusted Assets Hackathon · RWA Track · Deployed on Monad testnet (chain 10143)**
 
-[Concept](docs/01-concept.md) · [Architecture](docs/02-architecture.md) · [Build report](docs/04-build-report.md) · [UI audit](docs/05-ui-audit.md) · [Deployments](docs/deployments.md)
+Deployed: [EligibilityRegistry](https://testnet.monadscan.com/address/0x7e259bd022bef64d1Db3D65e5877C7A005c67B7F) · [PolicyRegistry](https://testnet.monadscan.com/address/0xB5C57CD5aB6592ca4FddD516161eDD3ba92BC818) · [VerifiedAssetToken](https://testnet.monadscan.com/address/0xD03a96319FB6fB4E702837c14021362e727446c7) · [SettlementToken](https://testnet.monadscan.com/address/0x40a57A703db976CF008D116AD594aF285F1a92eb) · [DistributionEngine](https://testnet.monadscan.com/address/0x9268aEc817615A79d363e3Bf156AC866eF398327) · [Concept](docs/01-concept.md) · [Architecture](docs/02-architecture.md) · [Build report](docs/04-build-report.md) · [Deployments](docs/deployments.md)
 
 <!-- Nano Banana Pro banner → docs/assets/banner.png (brief in docs/03-brand.md §4); replace this line with it when generated -->
 

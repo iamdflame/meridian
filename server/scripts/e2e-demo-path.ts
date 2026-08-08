@@ -45,9 +45,14 @@ const strandedIdx = bookRes.body.holders.findIndex((h) => ["KP", "IR"].includes(
 const okIdx = bookRes.body.holders.findIndex((h) => h.country === "SG" && h.verdict === 0);
 check("found stranded + eligible demo holders", strandedIdx >= 0 && okIdx >= 0, { strandedIdx, okIdx });
 
-// Transfer passes BEFORE enactment
-const before = await call<{ ok: boolean; source: string }>("POST", "/api/prove-transfer", { fromIndex: okIdx, toIndex: strandedIdx });
-check("transfer to KP/IR holder passes under v1", before.body.ok === true, before.body);
+// Transfer passes BEFORE enactment — skip only if this asset was already enacted
+// in an earlier run (on-chain state persists between boots).
+const alreadyV2 = book.policies.length > 1;
+if (alreadyV2) console.log("ℹ v2 already active on-chain (repeat run) — skipping pre-enact transfer beat");
+if (!alreadyV2) {
+  const before = await call<{ ok: boolean; source: string }>("POST", "/api/prove-transfer", { fromIndex: okIdx, toIndex: strandedIdx });
+  check("transfer to KP/IR holder passes under v1", before.body.ok === true, before.body);
+}
 
 // ENACT
 const enact = await call<{ enacted: { version: number; cleanverse: { source: string } }; sweep: { aggregates: Record<string, unknown> } }>("POST", "/api/enact", draft);
