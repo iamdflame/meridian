@@ -66,7 +66,7 @@ function Shell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </aside>
-      <main className="ml-[212px] min-h-screen flex-1 px-8 py-6 max-lg:ml-[64px] max-md:px-4">{children}</main>
+      <main className="ml-[212px] min-h-screen min-w-0 flex-1 px-8 py-6 max-lg:ml-[64px] max-md:px-4">{children}</main>
     </div>
   );
 }
