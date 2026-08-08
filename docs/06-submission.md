@@ -50,7 +50,9 @@
 
 **Team background:** — *fill per your actual team* —
 
-## Demo video — full production script
+## Demo video
+
+**Record from the production-checked canonical script in [13-video.md](13-video.md).** Its timings, labels, and numbers match the deployed app. The older long-form table below is retained only as shot-detail reference; do not use its narration or numeric claims.
 
 **Format:** 1440×900 browser, dark OS theme, cursor smoothing ON, 60fps screen recording. Voice: ElevenLabs — recommended voice profile: calm male/neutral "documentary" register (e.g. *Daniel* or *Brian*), stability 55, similarity 80, style 25, speed 0.98. Record VO per numbered line as separate clips for easy alignment. Target runtime ≈ 3:20 (no hard limit per rules — do NOT pad).
 
