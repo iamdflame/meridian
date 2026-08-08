@@ -1,0 +1,49 @@
+{
+  "product": "meridian",
+  "generatedAt": "2026-08-08T01:29:02.247Z",
+  "principle": "Every UI panel names its provenance. This manifest maps each chip to a verifiable source — a txid, a live API trace, or an explicitly labeled fixture. No silent fakery.",
+  "surfaces": [
+    {
+      "chip": "LIVE · SANDBOX",
+      "meaning": "Data read from / written to the Cleanverse Cooperate API (uatapi.cleanverse.com) with issued credentials",
+      "evidence": "server/scripts/smoke-cooperate-live.ts → 9/9 green; 11 real A-Pass records (cvRecordIds) created via generate_apass; verify_apass codes 4/3 round-tripped",
+      "reproducible": "pnpm tsx server/scripts/smoke-cooperate-live.ts"
+    },
+    {
+      "chip": "LIVE · MONAD",
+      "meaning": "On-chain state on Monad testnet (chain 10143)",
+      "evidence": "EligibilityRegistry 0x7e259bd022bef64d1Db3D65e5877C7A005c67B7F, PolicyRegistry 0xB5C57CD5aB6592ca4FddD516161eDD3ba92BC818, VerifiedAssetToken 0xD03a96319FB6fB4E702837c14021362e727446c7, SettlementToken 0x40a57A703db976CF008D116AD594aF285F1a92eb, DistributionEngine 0x9268aEc817615A79d363e3Bf156AC866eF398327 — deploy block 51815571",
+      "reproducible": "contracts/deployments/10143.json + explorer links in docs/deployments.md"
+    },
+    {
+      "chip": "SIMULATED · FIXTURE",
+      "meaning": "Cleanverse-sandbox-shaped responses from the stateful fixture adapter, used ONLY where a sandbox write would touch shared-tenant assets",
+      "evidence": "packages/cleanverse/src/fixtures.ts — freeze actually blocks verify, expiry actually blocks; every fixture response tagged source:'fixture'",
+      "reproducible": "packages/cleanverse/test/cooperate.test.ts"
+    },
+    {
+      "chip": "SIMULATED · DEMO",
+      "meaning": "Standalone Vercel demo engine running the same 500-vector-proven semantics on the seeded book",
+      "evidence": "web/lib/engine.ts + web/lib/demo-book.json — identical RuleV2 evaluator, labeled per panel",
+      "reproducible": "packages/sim + server/test/vectors.ts"
+    },
+    {
+      "surface": "Differential parity claim",
+      "chip": "—",
+      "evidence": "contracts/test/vectors.json (500 seeded vectors) executed by BOTH contracts/test/RuleVectors.t.sol and packages/sim — 500/500 agree, 0 drift",
+      "reproducible": "cd contracts && forge test --match-contract RuleVectorsTest"
+    },
+    {
+      "surface": "Invariant campaign claim",
+      "chip": "—",
+      "evidence": "contracts/test/Invariants.t.sol — 512 runs × 200 depth = 102,400 cases, 0 failures",
+      "reproducible": "cd contracts && forge test --match-contract Invariants"
+    },
+    {
+      "surface": "Measured study claim",
+      "chip": "—",
+      "evidence": "70 tokens across 7 chains indexed; 6/48 holders stranded, $151,187 frozen",
+      "reproducible": "node --import tsx server/scripts/study.ts"
+    }
+  ]
+}
