@@ -7,6 +7,7 @@ import {PolicyRegistry} from "../src/PolicyRegistry.sol";
 import {VerifiedAssetToken} from "../src/VerifiedAssetToken.sol";
 import {DistributionEngine} from "../src/DistributionEngine.sol";
 import {SettlementToken} from "../src/SettlementToken.sol";
+import {IPreEnactmentProof} from "../src/interfaces/IPreEnactmentProof.sol";
 import {RuleV2Lib} from "../src/lib/RuleV2Lib.sol";
 
 /// Shared fixture: admin-operated registry + policy + gated note + engine + cash leg.
@@ -33,7 +34,7 @@ contract Base is Test {
         note.grantRole(note.PROTOCOL_ROLE(), address(engine));
 
         // Baseline policy v1: minTier 10, no country restriction.
-        pol.enact(ASSET, _rule(10, 0, new bytes2[](0), true), "v1: baseline");
+        _anchorAndEnact(_rule(10, 0, new bytes2[](0), true), "v1: baseline");
 
         _attest(alice, "alice", 40, "SG");
         _attest(bob, "bob", 20, "US");
@@ -74,6 +75,12 @@ contract Base is Test {
     function _countries(bytes2 a) internal pure returns (bytes2[] memory c) {
         c = new bytes2[](1);
         c[0] = a;
+    }
+
+    function _anchorAndEnact(RuleV2Lib.Rule memory rule, string memory memo) internal returns (bytes32) {
+        bytes32 proofHash = keccak256(abi.encode(ASSET, pol.versionCount(ASSET), rule, memo));
+        pol.anchorProof(ASSET, rule, proofHash, 0, 0);
+        return pol.enact(ASSET, rule, memo, proofHash);
     }
 }
 
@@ -200,8 +207,9 @@ contract VerifiedAssetTokenTest is Base {
         vm.prank(alice);
         note.transfer(carol, 100e6); // v1: KP holder fine
 
-        vm.prank(admin);
-        pol.enact(ASSET, _rule(10, 0, _countries(bytes2("KP")), true), "v2: blacklist KP");
+        vm.startPrank(admin);
+        _anchorAndEnact(_rule(10, 0, _countries(bytes2("KP")), true), "v2: blacklist KP");
+        vm.stopPrank();
 
         vm.expectRevert(
             abi.encodeWithSelector(
@@ -253,8 +261,9 @@ contract VerifiedAssetTokenTest is Base {
     function test_tierRaiseStrandsLowTierHolder() public {
         vm.prank(alice);
         note.transfer(bob, 50e6);
-        vm.prank(admin);
-        pol.enact(ASSET, _rule(30, 0, new bytes2[](0), true), "v3: minTier 30");
+        vm.startPrank(admin);
+        _anchorAndEnact(_rule(30, 0, new bytes2[](0), true), "v3: minTier 30");
+        vm.stopPrank();
         vm.expectRevert(
             abi.encodeWithSelector(VerifiedAssetToken.TransferIneligible.selector, bob, RuleV2Lib.Reason.TierTooLow)
         );
@@ -299,8 +308,8 @@ contract EligibilityRegistryTest is Base {
 contract PolicyRegistryTest is Base {
     function test_hashChainLinks() public {
         vm.startPrank(admin);
-        bytes32 v2 = pol.enact(ASSET, _rule(30, 0, new bytes2[](0), true), "v2");
-        bytes32 v3 = pol.enact(ASSET, _rule(40, 0, new bytes2[](0), true), "v3");
+        bytes32 v2 = _anchorAndEnact(_rule(30, 0, new bytes2[](0), true), "v2");
+        bytes32 v3 = _anchorAndEnact(_rule(40, 0, new bytes2[](0), true), "v3");
         vm.stopPrank();
 
         assertEq(pol.versionCount(ASSET), 3);
@@ -311,9 +320,95 @@ contract PolicyRegistryTest is Base {
     }
 
     function test_enactRequiresGovernor() public {
+        RuleV2Lib.Rule memory rule = _rule(1, 0, new bytes2[](0), true);
+        bytes32 proofHash = keccak256("proof");
+        vm.prank(admin);
+        pol.anchorProof(ASSET, rule, proofHash, 0, 0);
         vm.expectRevert();
         vm.prank(alice);
-        pol.enact(ASSET, _rule(1, 0, new bytes2[](0), true), "nope");
+        pol.enact(ASSET, rule, "nope", proofHash);
+    }
+
+    function test_anchorRequiresGovernor() public {
+        vm.expectRevert();
+        vm.prank(alice);
+        pol.anchorProof(ASSET, _rule(1, 0, new bytes2[](0), true), keccak256("proof"), 0, 0);
+    }
+
+    function test_enactWithoutProofReverts() public {
+        bytes32 missing = keccak256("missing");
+        vm.expectRevert(abi.encodeWithSelector(PolicyRegistry.ProofNotFound.selector, ASSET, missing));
+        vm.prank(admin);
+        pol.enact(ASSET, _rule(30, 0, new bytes2[](0), true), "v2", missing);
+    }
+
+    function test_proofMustMatchExactRule() public {
+        RuleV2Lib.Rule memory proofedRule = _rule(30, 0, new bytes2[](0), true);
+        RuleV2Lib.Rule memory otherRule = _rule(40, 0, new bytes2[](0), true);
+        bytes32 proofHash = keccak256("proofed-30");
+        vm.prank(admin);
+        pol.anchorProof(ASSET, proofedRule, proofHash, 2, 50e6);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                PolicyRegistry.ProofRuleMismatch.selector, pol.hashRule(proofedRule), pol.hashRule(otherRule)
+            )
+        );
+        vm.prank(admin);
+        pol.enact(ASSET, otherRule, "v2", proofHash);
+    }
+
+    function test_proofMustMatchCurrentLineage() public {
+        RuleV2Lib.Rule memory v2Rule = _rule(30, 0, new bytes2[](0), true);
+        RuleV2Lib.Rule memory staleRule = _rule(40, 0, new bytes2[](0), true);
+        bytes32 v2Proof = keccak256("v2-proof");
+        bytes32 staleProof = keccak256("stale-v3-proof");
+        bytes32 v1Hash = pol.versionAt(ASSET, 0).hash;
+
+        vm.startPrank(admin);
+        pol.anchorProof(ASSET, v2Rule, v2Proof, 1, 10e6);
+        pol.anchorProof(ASSET, staleRule, staleProof, 2, 20e6);
+        pol.enact(ASSET, v2Rule, "v2", v2Proof);
+        vm.expectRevert(
+            abi.encodeWithSelector(PolicyRegistry.ProofLineageMismatch.selector, v1Hash, pol.versionAt(ASSET, 1).hash)
+        );
+        pol.enact(ASSET, staleRule, "v3", staleProof);
+        vm.stopPrank();
+    }
+
+    function test_proofCannotBeReused() public {
+        RuleV2Lib.Rule memory rule = _rule(30, 0, new bytes2[](0), true);
+        bytes32 proofHash = keccak256("single-use-proof");
+        vm.startPrank(admin);
+        pol.anchorProof(ASSET, rule, proofHash, 1, 10e6);
+        pol.enact(ASSET, rule, "v2", proofHash);
+        vm.expectRevert(abi.encodeWithSelector(PolicyRegistry.ProofAlreadyConsumed.selector, ASSET, proofHash));
+        pol.enact(ASSET, rule, "v3", proofHash);
+        vm.stopPrank();
+    }
+
+    function test_publicProofViewsExposeImpactAndLineage() public {
+        RuleV2Lib.Rule memory rule = _rule(30, 0, new bytes2[](0), true);
+        bytes32 proofHash = keccak256("public-proof");
+        vm.startPrank(admin);
+        pol.anchorProof(ASSET, rule, proofHash, 7, 123e6);
+        bytes32 versionHash = pol.enact(ASSET, rule, "v2", proofHash);
+        vm.stopPrank();
+
+        IPreEnactmentProof.ProofRecord memory proof = pol.activeProof(ASSET);
+        assertEq(proof.proofHash, proofHash);
+        assertEq(proof.versionHash, versionHash);
+        assertEq(proof.parentHash, pol.versionAt(ASSET, 0).hash);
+        assertEq(proof.affectedHolderCount, 7);
+        assertEq(proof.strandedValue, 123e6);
+        assertTrue(proof.consumed);
+        assertEq(pol.proofAt(ASSET, 1).proofHash, proofHash);
+        assertEq(pol.proofByHash(ASSET, proofHash).versionHash, versionHash);
+        assertEq(pol.versionAt(ASSET, 1).proofHash, proofHash);
+    }
+
+    function test_supportsPublicProofInterface() public view {
+        assertTrue(pol.supportsInterface(type(IPreEnactmentProof).interfaceId));
     }
 
     function test_noActivePolicyReverts() public {
@@ -359,8 +454,9 @@ contract DistributionEngineTest is Base {
     function test_suspendThenRelease() public {
         uint256 runId = _fundAndCreate();
 
-        vm.prank(admin);
-        pol.enact(ASSET, _rule(10, 0, _countries(bytes2("KP")), true), "v2: blacklist KP");
+        vm.startPrank(admin);
+        _anchorAndEnact(_rule(10, 0, _countries(bytes2("KP")), true), "v2: blacklist KP");
+        vm.stopPrank();
 
         vm.prank(admin);
         engine.payLegs(runId, 0, 3);

@@ -21,7 +21,8 @@ contract Deploy is Script {
 
         EligibilityRegistry registry = new EligibilityRegistry(admin);
         PolicyRegistry policy = new PolicyRegistry(admin);
-        VerifiedAssetToken note = new VerifiedAssetToken("Meridian Series-1 Note", "mNOTE", ASSET, registry, policy, admin);
+        VerifiedAssetToken note =
+            new VerifiedAssetToken("Meridian Series-1 Note", "mNOTE", ASSET, registry, policy, admin);
         SettlementToken cash = new SettlementToken(admin);
         DistributionEngine engine = new DistributionEngine(registry, policy, admin);
         note.grantRole(note.PROTOCOL_ROLE(), address(engine));
@@ -36,7 +37,9 @@ contract Deploy is Script {
             isBlackList: true,
             active: true
         });
-        policy.enact(ASSET, v1, "v1: baseline - minTier 10, no jurisdiction restriction");
+        bytes32 baselineProof = keccak256(abi.encode("MERIDIAN_BASELINE_PROOF_V1", ASSET, policy.hashRule(v1)));
+        policy.anchorProof(ASSET, v1, baselineProof, 0, 0);
+        policy.enact(ASSET, v1, "v1: baseline - minTier 10, no jurisdiction restriction", baselineProof);
 
         vm.stopBroadcast();
 

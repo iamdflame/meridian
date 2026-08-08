@@ -8,6 +8,7 @@ import {PolicyRegistry} from "../src/PolicyRegistry.sol";
 import {VerifiedAssetToken} from "../src/VerifiedAssetToken.sol";
 import {DistributionEngine} from "../src/DistributionEngine.sol";
 import {SettlementToken} from "../src/SettlementToken.sol";
+import {IPreEnactmentProof} from "../src/interfaces/IPreEnactmentProof.sol";
 import {RuleV2Lib} from "../src/lib/RuleV2Lib.sol";
 
 /// @dev Stateful fuzzer driving random attests, policy enacts, transfers, runs.
@@ -34,9 +35,14 @@ contract Handler is StdUtils, Test {
         cash = new SettlementToken(admin);
         engine = new DistributionEngine(reg, pol, admin);
         note.grantRole(note.PROTOCOL_ROLE(), address(engine));
-        pol.enact(ASSET, _rule(10, 0, new bytes2[](0), true), "v1");
+        RuleV2Lib.Rule memory baseline = _rule(10, 0, new bytes2[](0), true);
+        bytes32 baselineProof = keccak256("invariant-baseline-proof");
+        pol.anchorProof(ASSET, baseline, baselineProof, 0, 0);
+        pol.enact(ASSET, baseline, "v1", baselineProof);
         vm.stopPrank();
-        for (uint256 i = 1; i <= 12; i++) actors.push(address(uint160(0x1000 + i)));
+        for (uint256 i = 1; i <= 12; i++) {
+            actors.push(address(uint160(0x1000 + i)));
+        }
     }
 
     function _rule(uint8 minTier, uint8 minSubTier, bytes2[] memory countries, bool isBlackList)
@@ -61,15 +67,28 @@ contract Handler is StdUtils, Test {
         uint64 expiry = uint64(bound(expiryRaw, 0, 1000)) + uint64(block.timestamp);
         if (statusRaw % 7 == 0) expiry = uint64(block.timestamp - 1); // force expired sometimes
         vm.prank(admin);
-        reg.attest(w, keccak256(bytes(vm.toString(w))), tier % 100, 0, bytes2("AB"), bytes2("AB"), ai % 3 == 0 ? bytes2("SG") : bytes2("US"), status, expiry);
+        reg.attest(
+            w,
+            keccak256(bytes(vm.toString(w))),
+            tier % 100,
+            0,
+            bytes2("AB"),
+            bytes2("AB"),
+            ai % 3 == 0 ? bytes2("SG") : bytes2("US"),
+            status,
+            expiry
+        );
     }
 
     function enact(uint8 minTier) external {
         bytes32 hash = keccak256(abi.encode("rule", minTier, block.timestamp, pol.versionCount(ASSET)));
         if (seenPolicyHash[hash]) return;
         seenPolicyHash[hash] = true;
-        vm.prank(admin);
-        pol.enact(ASSET, _rule(minTier % 100, 0, new bytes2[](0), true), vm.toString(minTier));
+        RuleV2Lib.Rule memory rule = _rule(minTier % 100, 0, new bytes2[](0), true);
+        vm.startPrank(admin);
+        pol.anchorProof(ASSET, rule, hash, 0, 0);
+        pol.enact(ASSET, rule, vm.toString(minTier), hash);
+        vm.stopPrank();
     }
 
     function mintTo(uint8 ai, uint256 amount) external {
@@ -122,6 +141,13 @@ contract Invariants is Test {
     /// @notice Policy version count only grows; hash chain never shrinks.
     function invariant_policyChainAppendsOnly() public view {
         assertGt(handler.pol().versionCount(handler.ASSET()), 0);
+    }
+
+    /// @notice Every active policy is backed by a consumed public proof record.
+    function invariant_activePolicyHasProof() public view {
+        IPreEnactmentProof.ProofRecord memory proof = handler.pol().activeProof(handler.ASSET());
+        assertTrue(proof.proofHash != bytes32(0));
+        assertTrue(proof.consumed);
     }
 
     /// @notice Total supply never exceeds what was minted through the gated path.
