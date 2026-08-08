@@ -125,6 +125,23 @@ html {
   box-shadow: var(--elev-1);
 }
 
+.landing-hero-art {
+  opacity: 0.72;
+}
+
+.landing-hero-shade {
+  background: linear-gradient(180deg, rgba(6, 8, 13, 0.2) 0%, rgba(6, 8, 13, 0.08) 45%, var(--bg-0) 96%);
+}
+
+[data-theme="light"] .landing-hero-art {
+  filter: saturate(0.8);
+  opacity: 0.2;
+}
+
+[data-theme="light"] .landing-hero-shade {
+  background: linear-gradient(180deg, rgba(247, 249, 253, 0.12) 0%, rgba(247, 249, 253, 0.35) 45%, var(--bg-0) 96%);
+}
+
 /* designed focus — never the default outline */
 :focus-visible {
   outline: none;

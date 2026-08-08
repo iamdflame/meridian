@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -68,35 +69,16 @@ const ACTS = [
 export default function Landing() {
   return (
     <div className="relative overflow-x-clip">
-      {/* ── hero field: meridian lines + node constellation (pure CSS/SVG — no assets) ── */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px]" aria-hidden>
-        <svg className="h-full w-full" viewBox="0 0 1440 720" fill="none" preserveAspectRatio="xMidYMin slice">
-          {[...Array(9)].map((_, i) => (
-            <path
-              key={i}
-              d={`M ${160 * i + 80} 0 Q ${160 * i + 80 + (i % 2 ? 40 : -40)} 360 ${160 * i + 80} 720`}
-              stroke="rgba(148,170,220,0.05)"
-              strokeWidth="1"
-            />
-          ))}
-          <line x1="720" y1="0" x2="720" y2="720" stroke="rgba(83,225,249,0.35)" strokeWidth="1.5" />
-          <line x1="720" y1="0" x2="720" y2="720" stroke="rgba(83,225,249,0.12)" strokeWidth="6" />
-          {[
-            [180, 140, 1], [320, 420, 0], [420, 250, 1], [540, 520, 1], [610, 180, 0],
-            [820, 320, 1], [900, 150, 1], [1020, 460, 0], [1120, 240, 1], [1250, 380, 1],
-            [260, 580, 1], [1330, 130, 0], [760, 560, 1], [480, 640, 0], [980, 620, 1],
-          ].map(([x, y, ok], i) => (
-            <circle key={i} cx={x} cy={y} r="3" fill={ok ? "rgba(74,222,128,0.55)" : "rgba(248,113,113,0.55)"}>
-              <animate attributeName="opacity" values="0.4;1;0.4" dur={`${3 + (i % 5)}s`} repeatCount="indefinite" />
-            </circle>
-          ))}
-          <circle cx="720" cy="330" r="5" fill="#E8EDF8" />
-          <circle cx="720" cy="330" r="16" stroke="rgba(83,225,249,0.5)" strokeWidth="1.5">
-            <animate attributeName="r" values="10;26" dur="2.4s" repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.7;0" dur="2.4s" repeatCount="indefinite" />
-          </circle>
-        </svg>
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 40%, var(--bg-0) 95%)" }} />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] overflow-hidden" aria-hidden>
+        <Image
+          src="/brand/hero-bg.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="landing-hero-art object-cover object-center"
+        />
+        <div className="landing-hero-shade absolute inset-0" />
       </div>
 
       {/* ── nav ── */}
@@ -109,7 +91,7 @@ export default function Landing() {
           <a href="#story" className="transition-colors hover:text-ink-1 max-md:hidden">
             How it works
           </a>
-          <a href="https://github.com/iamdflame/meridian" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink-1">
+          <a href="https://github.com/iamdflame/meridian" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink-1 max-sm:hidden">
             GitHub
           </a>
           <Link href="/verify" className="transition-colors hover:text-ink-1 max-sm:hidden">

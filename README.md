@@ -16,7 +16,7 @@ Deployed: [EligibilityRegistry](https://testnet.monadscan.com/address/0xE9cBAf2d
 
 [Concept](docs/01-concept.md) · [Architecture](docs/02-architecture.md) · [Primitive](docs/15-primitive.md) · [Build report](docs/04-build-report.md) · [Deployments](docs/deployments.md)
 
-<!-- Nano Banana Pro banner -> docs/assets/banner.png (full prompt in docs/prompts/images.md); replace this line when generated -->
+<img src="docs/assets/banner.png" width="1280" alt="Meridian pre-enactment proofs for verified assets" />
 
 </div>
 
