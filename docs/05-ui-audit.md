@@ -43,4 +43,4 @@
 
 ## Self-assessment vs reference class
 
-Strongest dimension: **data-as-geometry** (the policy-space Book Map + sweep) — an interaction pattern none of the reference sites has an equivalent for, and no competitor's screenshots will resemble. At parity: token discipline, motion restraint, provenance chips. Below reference (accepted, time-boxed): no light mode; landing hero is SVG-procedural rather than commissioned art (Nano Banana Pro briefs pending human execution).
+Strongest dimension: **data-as-geometry** (the policy-space Book Map + sweep) — an interaction pattern none of the reference sites has an equivalent for, and no competitor's screenshots will resemble. At parity: token discipline, motion restraint, provenance chips. Commissioned-art replacement remains a human-executed enhancement with a complete handoff in [prompts/images.md](prompts/images.md).

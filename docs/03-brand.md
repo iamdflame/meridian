@@ -93,22 +93,15 @@ Mark: a circle (the book) crossed by the meridian line; a single holder-node sit
 
 Wordmark: `MERIDIAN` in Geist 600, `--track-display`, ink-1, mark at left, cap-height aligned. Favicon: mark only on `--bg-0`.
 
-## 4. Asset delegation briefs (human-executed; product never blocks on these)
+## 4. Asset production handoff
 
-**Nano Banana Pro — images**
+Generation instructions are separated from the design system so each handoff is complete and paste-ready:
 
-| Asset | Path | Prompt | Specs |
-|---|---|---|---|
-| Hero background | `web/public/brand/hero-bg.png` | "Vast dark navigation chart seen from above, near-black deep blue ink (#06080D), faint longitude meridian lines converging, one luminous cyan (#53E1F9) vertical line crossing a subtle circle of tiny glowing nodes, thin phosphor radar wavefront, ultra-minimal, premium fintech, no text, no lens flare, cinematic grain 2%" · style: Linear/Vercel hero, restrained · negative: "clutter, saturated rainbow, sci-fi HUD kitsch, text, watermark" | 2880×1620 PNG |
-| OG image | `web/public/brand/og.png` | Same world; add wordmark MERIDIAN centered (Geist 600, #E8EDF8) with tagline 'Compliance that can see.' beneath in #9AA8C7; node grid mid-sweep with a handful flipped amber/red | 2400×1260 PNG |
-| README banner | `docs/assets/banner.png` | OG variant, wider crop, tagline right-aligned | 2560×720 PNG |
+- [Image prompts](prompts/images.md): Nano Banana Pro hero, Open Graph image, and README banner.
+- [Video prompts](prompts/videos.md): Veo 3.1 Act 1 opener and Act 3 closer, including second-by-second motion and edit constraints.
+- [Demo edit timeline](13-video.md): real product shots, narration, and placement of generated interstitials.
 
-**Veo 3.1 — video interstitials** (full shot list lives in 06-submission)
-
-| Clip | Path | Prompt | Length |
-|---|---|---|---|
-| Act-1 opener | `media/veo-act1.mp4` | "Slow dolly over a dark ocean chart table, paper memos and a spreadsheet dissolve into darkness; a single cyan meridian line ignites across the frame; calm, ominous → resolute; no people; 4K, shallow depth" | 8s |
-| Act-3 closer | `media/veo-act3.mp4` | "Camera pulls back from a single glowing node to reveal a planetary grid of verified nodes along meridian lines, cyan on near-black, one line pulses like a heartbeat; hopeful, vast; ends on clean dark frame for logo" | 8s |
+Generated assets are a human-executed enhancement and never block the working product or its public proofs.
 
 ## 5. Exit check
 

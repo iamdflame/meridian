@@ -51,7 +51,7 @@ Ran the quickstart cold: 23 unit + 22 forge + 500-vector parity + 20-check e2e, 
 |---|---|---|
 | 1 | **Register before Aug 7 23:59 UTC** (form fields pre-written in [06-submission.md](06-submission.md)) | Fatal — no eligibility, no API keys, no docs code |
 | 2 | **Fund deployer + run Monad deploy** (exact commands in [deployments.md](deployments.md)) | −4 to −6 across CTO/Monad/skeptic scores; anvil evidence partially substitutes |
-| 3 | **Vercel deploy** (steps in 06) + record demo video per shot list + generate Nano Banana Pro / Veo assets (briefs in [03-brand.md](03-brand.md)) | Video is likely mandatory for judging; deploy strongly expected |
+| 3 | **Vercel deploy** (steps in 06) + record demo video per shot list + generate Nano Banana Pro / Veo assets ([image prompts](prompts/images.md) · [video prompts](prompts/videos.md)) | Video is likely mandatory for judging; deploy strongly expected |
 | 4 | Push to GitHub (CI goes green publicly) | README claims lose their public evidence |
 | 5 | When API keys arrive: paste into `.env`, re-run e2e (`node --import tsx server/scripts/e2e-demo-path.ts`) — chips flip to LIVE·SANDBOX with zero code changes; forward the gated docs to verify the API map | Recovers the −3 in the CTO score |
 

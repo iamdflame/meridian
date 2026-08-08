@@ -32,7 +32,7 @@
 ## Shot list (split)
 
 - **Screen recordings** (recorded against live Monad deployment, explorer tab visible for txids): shots 2,3,4,5,6,7,8,9,10 (Book freeze, Studio slider, Sweep, Enact+proof, Distributions lifecycle, Agent scenario, `pnpm judge`). 1440×900, 60fps, cursor smoothing.
-- **Veo 3.1 interstitials** (HUMAN ACTION REQUIRED — briefs in 03-brand.md §4): Act-1 opener (8s), Act-3 closer (8s).
+- **Veo 3.1 interstitials** (HUMAN ACTION REQUIRED — [complete prompts](prompts/videos.md)): Act-1 opener (8s), Act-3 closer (8s).
 - **Captions:** burned in, every line above verbatim.
 
 ## Upload checklist

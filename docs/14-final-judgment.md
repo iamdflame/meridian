@@ -59,7 +59,7 @@ On the report's 10-scale (description-only, its actual method): **Meridian 9.6**
 1. **Push to GitHub** (`iamdflame/meridian`) — blocked on a repo-scoped PAT (Codespaces integration token is read-only here). *Commands provided; this single step unlocks CI badge + public evidence.*
 2. **Submit via email to isaac@cleanverse.com before Aug 9 23:59 UTC** — repo link + video link + one-page summary (`docs/one-pager.md`). *This is the only deadline that matters.*
 3. **Record the demo video** per `docs/13-video.md` storyboard (ElevenLabs VO, Veo interstitials, live-Monad click-paths).
-4. **Generate art** — Nano Banana Pro hero/og + Veo clips (briefs in `docs/03-brand.md` §4).
+4. **Generate art** — Nano Banana Pro hero/OG assets from `docs/prompts/images.md` and Veo clips from `docs/prompts/videos.md`.
 5. **Vercel deploy** (CLI login pending human) — or any static host; the app runs standalone in honest demo mode without the server.
 
 ## Final sweep v2

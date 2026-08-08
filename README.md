@@ -16,7 +16,7 @@ Deployed: [EligibilityRegistry](https://testnet.monadscan.com/address/0x7e259bd0
 
 [Concept](docs/01-concept.md) · [Architecture](docs/02-architecture.md) · [Build report](docs/04-build-report.md) · [Deployments](docs/deployments.md)
 
-<!-- Nano Banana Pro banner → docs/assets/banner.png (brief in docs/03-brand.md §4); replace this line with it when generated -->
+<!-- Nano Banana Pro banner -> docs/assets/banner.png (full prompt in docs/prompts/images.md); replace this line when generated -->
 
 </div>
 
