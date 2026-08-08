@@ -4,11 +4,12 @@ pragma solidity 0.8.28;
 import {AccessControl} from "openzeppelin-contracts/contracts/access/AccessControl.sol";
 import {RuleV2Lib} from "./lib/RuleV2Lib.sol";
 
-/// @title PolicyRegistry — active RuleV2 per asset plus an append-only version hash chain.
-/// @notice Every enacted policy version is hash-linked to its parent:
+/// @title PolicyRegistry — the anchor for Meridian's pre-enactment proofs.
+/// @notice A blast-radius proof (computed off-chain, proven identical to what the
+///         chain enforces) is meaningless unless the policy it predicted is bound
+///         immutably on-chain. Every enacted version is hash-linked to its parent:
 ///         versionHash = keccak256(parentHash ‖ assetId ‖ encodedRule ‖ timestamp).
-///         The chain is the tamper-evident spine of Meridian's evidence packs: a judge
-///         (or regulator) can recompute every link from public calldata.
+///         The chain is the tamper-evident spine that turns a simulation into a proof.
 contract PolicyRegistry is AccessControl {
     bytes32 public constant GOVERNOR_ROLE = keccak256("GOVERNOR_ROLE");
 

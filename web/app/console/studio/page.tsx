@@ -95,7 +95,7 @@ export default function StudioPage() {
       <header className="flex items-baseline justify-between">
         <div>
           <h1 className="text-xl font-semibold tracking-[-0.02em]">Policy Studio</h1>
-          <p className="mt-0.5 text-[13px] text-ink-3">Draft a rule change. Sweep the full book. See the blast radius. Then sign.</p>
+          <p className="mt-0.5 text-[13px] text-ink-3">Draft a rule. Sweep the full book. The blast-radius proof — identical to what the chain will enforce — is anchored before the policy becomes law.</p>
         </div>
         <div className="num text-[11px] text-ink-3">active: v{book.policies.length}</div>
       </header>

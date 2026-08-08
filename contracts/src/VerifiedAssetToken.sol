@@ -7,10 +7,11 @@ import {EligibilityRegistry} from "./EligibilityRegistry.sol";
 import {PolicyRegistry} from "./PolicyRegistry.sol";
 import {RuleV2Lib} from "./lib/RuleV2Lib.sol";
 
-/// @title VerifiedAssetToken — a policy-gated RWA note in the A-Token pattern.
-/// @notice Every transfer evaluates BOTH legs live against the current policy and
-///         credential state — never latched, so an expired or frozen holder is refused
-///         from the moment their credential lapses, with a legible reason, not a bare revert.
+/// @title VerifiedAssetToken — the enforcement half of a pre-enactment proof.
+/// @notice The blast-radius engine predicts this gate's verdicts off-chain; this
+///         contract is the on-chain truth the prediction is proven against. Every
+///         transfer evaluates BOTH legs live against current policy and credential
+///         state — never latched — with a legible refusal reason, not a bare revert.
 /// @dev    _update is the single choke point: OZ v5 routes transfer/mint/burn through it
 ///         and _balances is private, so there is no bypass path.
 contract VerifiedAssetToken is ERC20, AccessControl {

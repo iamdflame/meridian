@@ -6,7 +6,7 @@
 
 **Compliance that can see.**
 
-*Mission control for verified-asset issuers on Cleanverse — simulate any policy change against the live book, see the exact blast radius, enact it with one signed call, and export the proof.*
+*Meridian is pre-enactment proof for on-chain compliance: the blast radius of any policy change is computed, proven identical to what the chain will enforce, and anchored before the rule becomes law. The console is the interface to the primitive.*
 
 **Cleanverse Build: Trusted Assets Hackathon · RWA Track · Deployed on Monad testnet (chain 10143)**
 

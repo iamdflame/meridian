@@ -132,7 +132,7 @@ export default function Landing() {
           can <em className="font-editorial font-normal not-italic" style={{ fontStyle: "italic", color: "var(--brand-1)" }}>see</em>.
         </h1>
         <p className="rise mt-6 max-w-xl text-[16px] leading-relaxed text-ink-2" style={{ animationDelay: "120ms" }}>
-          Every policy an issuer enacts today is enacted blind. Meridian sweeps your entire verified-asset book through a draft rule, shows the exact blast radius, enacts it with one signed call — and hands you the proof.
+          Meridian issues pre-enactment proofs: the blast radius of any policy change, computed over your live book, proven identical to what the chain will enforce, and anchored before the rule becomes law.
         </p>
         <div className="rise mt-8 flex items-center gap-3" style={{ animationDelay: "180ms" }}>
           <Link
