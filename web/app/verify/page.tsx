@@ -7,7 +7,7 @@ import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { HashPill } from "@/components/ui";
 
-const DEFAULT_REGISTRY = "0xB5C57CD5aB6592ca4FddD516161eDD3ba92BC818";
+const DEFAULT_REGISTRY = "0xe522D342E3355B5cBA1fce3624B4403Ae1f8DED6";
 const DEFAULT_ASSET = "MERIDIAN-NOTE-1";
 
 type ProofResponse = {

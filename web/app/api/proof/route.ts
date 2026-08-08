@@ -3,7 +3,7 @@ import { createPublicClient, http, keccak256, parseAbi, toBytes, type Address, t
 
 export const dynamic = "force-dynamic";
 
-const DEFAULT_REGISTRY = "0xB5C57CD5aB6592ca4FddD516161eDD3ba92BC818";
+const DEFAULT_REGISTRY = "0xe522D342E3355B5cBA1fce3624B4403Ae1f8DED6";
 const ZERO_HASH = `0x${"0".repeat(64)}`;
 const proofAbi = parseAbi([
   "struct ProofRecord { bytes32 proofHash; bytes32 ruleHash; bytes32 versionHash; bytes32 parentHash; uint64 affectedHolderCount; uint64 anchoredAt; uint64 enactedAt; uint256 strandedValue; bool consumed; }",
