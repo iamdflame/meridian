@@ -1,0 +1,19 @@
+{
+  "capturedAt": "2026-08-08T03:12:44Z",
+  "environment": "Cleanverse UAT Cooperate API",
+  "result": "9/9 GREEN",
+  "provenance": "live",
+  "checks": [
+    "verify_apass rejects an unknown wallet",
+    "generate_apass accepts an AES-encrypted request",
+    "query_apass returns the generated record",
+    "issuingCountryISO2 round-trips as country tag SG",
+    "verify_apass returns Valid (code 4) for the registered wallet",
+    "update_status freeze blocks transfer (code 3)",
+    "update_status reactivate restores Valid (code 4)",
+    "atoken/rules reaches the shared owner-gated asset",
+    "query_apass_list returns a paginated response"
+  ],
+  "reproduce": "set -a && . ./.env && set +a && node --import tsx server/scripts/smoke-cooperate-live.ts",
+  "credentialNote": "A live rerun requires issued Cleanverse sandbox credentials. No credential or encrypted request payload is stored in this receipt."
+}

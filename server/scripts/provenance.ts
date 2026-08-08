@@ -25,7 +25,7 @@ const manifest = {
       chip: "LIVE · MONAD",
       meaning: "On-chain state on Monad testnet (chain 10143)",
       evidence: dep
-        ? `EligibilityRegistry ${dep.registry}, PolicyRegistry ${dep.policy}, VerifiedAssetToken ${dep.note}, SettlementToken ${dep.cash}, DistributionEngine ${dep.engine} — deploy block ${dep.deployBlock}`
+        ? `EligibilityRegistry ${dep.registry}, PolicyRegistry ${dep.policy}, VerifiedAssetToken ${dep.note}, SettlementToken ${dep.cash}, DistributionEngine ${dep.engine} — broadcast start ${dep.deployBlock}; successful receipts ${dep.receiptBlockRange.first}–${dep.receiptBlockRange.last}`
         : "contracts/deployments/10143.json",
       reproducible: "contracts/deployments/10143.json + explorer links in docs/deployments.md",
     },

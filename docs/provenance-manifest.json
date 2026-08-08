@@ -1,6 +1,6 @@
 {
   "product": "meridian",
-  "generatedAt": "2026-08-08T01:29:02.247Z",
+  "generatedAt": "2026-08-08T02:55:51.708Z",
   "principle": "Every UI panel names its provenance. This manifest maps each chip to a verifiable source — a txid, a live API trace, or an explicitly labeled fixture. No silent fakery.",
   "surfaces": [
     {
@@ -12,7 +12,7 @@
     {
       "chip": "LIVE · MONAD",
       "meaning": "On-chain state on Monad testnet (chain 10143)",
-      "evidence": "EligibilityRegistry 0x7e259bd022bef64d1Db3D65e5877C7A005c67B7F, PolicyRegistry 0xB5C57CD5aB6592ca4FddD516161eDD3ba92BC818, VerifiedAssetToken 0xD03a96319FB6fB4E702837c14021362e727446c7, SettlementToken 0x40a57A703db976CF008D116AD594aF285F1a92eb, DistributionEngine 0x9268aEc817615A79d363e3Bf156AC866eF398327 — deploy block 51815571",
+      "evidence": "EligibilityRegistry 0x7e259bd022bef64d1Db3D65e5877C7A005c67B7F, PolicyRegistry 0xB5C57CD5aB6592ca4FddD516161eDD3ba92BC818, VerifiedAssetToken 0xD03a96319FB6fB4E702837c14021362e727446c7, SettlementToken 0x40a57A703db976CF008D116AD594aF285F1a92eb, DistributionEngine 0x9268aEc817615A79d363e3Bf156AC866eF398327 — broadcast start 51815571; successful receipts 51815577–51815607",
       "reproducible": "contracts/deployments/10143.json + explorer links in docs/deployments.md"
     },
     {

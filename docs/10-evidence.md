@@ -10,10 +10,10 @@
 | 2 | Foundry unit suite (gates, escrow, registry, policy chain) | **27 passing** | `cd contracts && forge test` |
 | 3 | Differential parity — TS simulator ≡ Solidity gate | **500 vectors, 0 drift** | `node --import tsx server/scripts/gen-vectors.ts && cd contracts && forge test --match-contract RuleVectorsTest` |
 | 4 | Invariant campaign (gate soundness, escrow conservation, policy-chain append-only, identity monotonicity) | **102,400 cases (512 runs × 200 depth), 0 failures** | `cd contracts && forge test --match-contract Invariant --fuzz-runs 512` |
-| 5 | Live Cooperate sandbox smoke (generate, country tags, verify codes, freeze→block→reactivate, paginated list) | **9/9 green** | `set -a && . ./.env && set +a && node --import tsx server/scripts/smoke-cooperate-live.ts` |
+| 5 | Live Cooperate sandbox smoke (generate, country tags, verify codes, freeze→block→reactivate, paginated list) | **9/9 green** | [public receipt](evidence/live-cooperate-smoke.json) · credentialed rerun: `node --import tsx server/scripts/smoke-cooperate-live.ts` |
 | 6 | Live public Skills API (no credentials) | chain config + magiclink + institutions | `node --import tsx packages/cleanverse/scripts/smoke-skills.ts` |
 | 7 | Measured real-chain study (blast radius of a FATF-style jurisdiction deny-list) | **70 tokens / 7 chains · 6 of 48 holders stranded · $151,187 frozen** | `node --import tsx server/scripts/study.ts` |
-| 8 | Deployed on Monad testnet (10143), 5 contracts | **block 51815571** | `docs/deployments.md` (explorer links) |
+| 8 | Deployed on Monad testnet (10143), 5 contracts | **7 successful receipts · blocks 51815577–51815607** | `docs/deployments.md` (address + tx links) |
 | 9 | End-to-end demo path | **20/20 checks** (fixture AND live-chain) | `node --import tsx server/scripts/e2e-demo-path.ts` |
 | 10 | Self-judging repo | **9/9 surfaces green** | `node --import tsx server/scripts/judge.ts` |
 
