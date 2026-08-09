@@ -50,11 +50,13 @@ export function StatCard({
   value,
   sub,
   tone,
+  compact,
 }: {
   label: string;
   value: string;
   sub?: string;
   tone?: "ok" | "warn" | "danger";
+  compact?: boolean;
 }) {
   const color =
     tone === "danger"
@@ -68,7 +70,11 @@ export function StatCard({
     <div className="panel min-w-0 px-5 py-4 max-md:px-3">
       <div className="label">{label}</div>
       <div
-        className="num mt-1.5 text-2xl font-medium max-md:text-lg"
+        className={
+          compact
+            ? "num mt-2 text-[12.5px] leading-relaxed break-words max-md:text-[11px]"
+            : "num mt-1.5 text-2xl font-medium max-md:text-lg"
+        }
         style={{ color }}
       >
         {value}

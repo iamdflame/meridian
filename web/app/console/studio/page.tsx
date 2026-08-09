@@ -181,7 +181,7 @@ export default function StudioPage() {
               <StatCard label="Newly ineligible" value={String(result.aggregates.newlyIneligible)} tone={result.aggregates.newlyIneligible > 0 ? "danger" : "ok"} sub={`${result.aggregates.eligibleBefore} → ${result.aggregates.eligibleAfter} eligible`} />
               <StatCard label="Value stranded" value={`$${fmtUsd(result.aggregates.strandedValue)}`} tone={BigInt(result.aggregates.strandedValue) > 0n ? "danger" : "ok"} sub="positions losing transferability" />
               <StatCard label="Coupons at risk" value={String(result.aggregates.strandedPendingLegs)} tone={result.aggregates.strandedPendingLegs > 0 ? "warn" : "ok"} sub={`$${fmtUsd(result.aggregates.strandedPendingValue)} would suspend`} />
-              <StatCard label="Refusal mix" value={Object.entries(result.aggregates.reasonsAfter).length ? Object.entries(result.aggregates.reasonsAfter).map(([k, v]) => `${v} ${k}`).join(" · ") : "—"} sub="reasons after draft" />
+              <StatCard label="Refusal mix" compact value={Object.entries(result.aggregates.reasonsAfter).length ? Object.entries(result.aggregates.reasonsAfter).map(([k, v]) => `${v} ${k}`).join(" · ") : "—"} sub="reasons after draft" />
             </div>
           ) : (
             <div className="panel px-5 py-4 text-[13px] text-ink-3">

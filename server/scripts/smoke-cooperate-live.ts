@@ -10,7 +10,17 @@ import { demoWallet } from "../src/chain/wallets.js";
 const { cooperate } = fromEnv();
 if (!cooperate.live) throw new Error("credentials missing in .env — this smoke requires live mode");
 
-const AUSDC = "0xaC0893567D43C3E7e6e35a72803df05416C1f20D";
+// The shared sandbox retires atokens without notice; resolve a verify-capable one live.
+const PINNED_AUSDC = "0xaC0893567D43C3E7e6e35a72803df05416C1f20D";
+const FALLBACKS = ["0x09A050Eb813ddb0b1EEAE7bca83bc1becD04FA31", "0xe32825bb4bf312688233f68abde3eb6dcbc89caf"];
+async function resolveAtoken(probeWallet: string): Promise<string> {
+  for (const atoken of [process.env.MERIDIAN_ATOKEN, PINNED_AUSDC, ...FALLBACKS].filter((a): a is string => Boolean(a))) {
+    const probe = await cooperate.verifyApass({ chain: "monad", atoken, address: probeWallet });
+    if (probe.data?.code !== VerifyCode.AtokenNotFound) return atoken;
+  }
+  throw new Error("no live atoken accepts verify_apass — sandbox catalog changed");
+}
+
 const wallet = demoWallet(900); // high index: never collides with the demo book
 // Fresh wallet per run so the "unknown" probe stays unknown (records persist in the shared tenant).
 const unknownWallet = demoWallet(100000 + (Date.now() % 800000));
@@ -23,6 +33,8 @@ const ok = (label: string, cond: boolean, detail?: unknown) => {
 };
 
 // 1. verify_apass on an unknown wallet → NoApass (2) or AtokenNotFound (1)
+const AUSDC = await resolveAtoken(unknownWallet);
+console.log(`resolved verify atoken → ${AUSDC}${AUSDC === PINNED_AUSDC ? " (shared aUSDC)" : " (live fallback — shared aUSDC retired from verify)"}`);
 const v0 = await cooperate.verifyApass({ chain: "monad", atoken: AUSDC, address: unknownWallet });
 ok("verify_apass(unknown) returns a non-valid code", v0.source === "live" && v0.data?.code !== VerifyCode.Valid, v0.data);
 
