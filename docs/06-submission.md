@@ -13,14 +13,16 @@
 >
 > Hi Isaac,
 >
-> Submitting **Meridian** for the RWA track — mission control for verified-asset issuers: simulate any compliance-policy change against the live holder book, see the exact blast radius, enact it through Cleanverse with one signed call, and export a regulator-verifiable evidence pack.
+> Submitting **Meridian** for the RWA track. Meridian is pre-enactment proof for on-chain compliance: the blast radius of any policy change is computed over the live holder book, proven identical to what the chain will enforce, and anchored on Monad before the rule becomes law — then consumed by issuers, protocol contracts, holders, and agents through a permissionless interface.
 >
 > • Repo: https://github.com/iamdflame/meridian · Window ledger: https://github.com/iamdflame/meridian/blob/main/docs/hacking-window.md
-> • Demo video: [LINK]
+> • Demo video: https://youtu.be/bxZNAB-_BSQ
 > • Live demo: https://meridian-three-olive.vercel.app · Public proof verifier: https://meridian-three-olive.vercel.app/verify · Contracts on Monad testnet: https://github.com/iamdflame/meridian/blob/main/docs/deployments.md
 > • One-page summary: attached (also docs/one-pager.md in repo)
 >
-> Quick verification for reviewers: `pnpm install && pnpm vitest run && node --import tsx server/scripts/e2e-demo-path.ts` runs the full demo path with zero credentials; with sandbox keys in .env, `server/scripts/smoke-cooperate-live.ts` passes 9/9 against the live Cooperate API.
+> Quick verification for reviewers: from a fresh clone, `pnpm install && pnpm judge` re-derives the entire evidence ledger — 24 unit tests, 37 Foundry tests, 500/500 differential vectors, the 102,400-case invariant campaign, the live sandbox smokes, the Monad deployment record, and the 24-check e2e — and prints a 9/9 scoreboard.
+>
+> Per your note about updating project descriptions: we'd appreciate ours being replaced with the updated description included at the bottom of this email.
 >
 > — Uniq Minds
 
@@ -48,7 +50,7 @@
 **Cleanverse integration plan (form field):**
 > Already integrated: Skills API live (chain config, magiclink, institutions); Cooperate v5.6 client with AES write-body helper for A-Pass lifecycle, A-Token rules, validator pools, Travel Rule (live where sandbox credentials permit, faithful labeled fixtures otherwise); on-chain policy gate + suspense escrow on Monad. Post-hackathon: register DistributionEngine as a validator compliance pool (registerV2), full country-dimension coverage, and pilot with one RWA issuer's compliance desk — Meridian is the module between Cleanverse's raw API and the institutions it sells to.
 
-**Team background:** — *fill per your actual team* —
+**Team background:** *(registration form field only — not required in the submission email; fill truthfully if you choose to include it)*
 
 ## Demo video
 
