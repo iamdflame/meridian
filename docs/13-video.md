@@ -21,14 +21,16 @@
 - 1:02–1:22 · **Run sweep**. Hold when counters settle. VO: "Sweep. Twelve holders lose eligibility, three hundred forty-two thousand two hundred nineteen dollars loses transferability, and seven coupons are at risk — before a signature."
 - 1:22–1:36 · **Enact as v2**. Hold on the `SIMULATED · DEMO` transfer flip and digest. VO: "The standalone demo labels its write simulation and content-addresses the exact sweep. The deployed primitive is not a claim. It is public state."
 - 1:36–1:54 · Open **Public Verifier**. Hold on green verification, `Consumed`, timestamps, and hashes. VO: "No login. No wallet. A public RPC proves the proof was anchored before enactment, consumed by the active policy, and bound to its rule and lineage."
-- 1:54–2:14 · Distributions: **Execute run**; 9 paid, 3 suspended. Click **Release** on a suspended leg, then **Remediate**, then **Release**. VO: "Mid-flight money is caught, not lost. Nine legs pay; three suspend into escrow. Release is refused until remediation, then eligibility is re-proven and payment completes."
+- 1:54–2:14 · Distributions: **Execute run**; 5 pay, **7 suspend — exactly the seven coupons the sweep predicted**. Click **Release** on a suspended leg (refused), then **Remediate**, then **Release**. VO: "The coupon run pays five legs and suspends seven into escrow — exactly the seven the sweep predicted. Prediction equals outcome. Release is refused until the holder re-verifies; then eligibility is re-proven and payment completes."
 - 2:14–2:30 · Agent Surface: **Run agent scenario**; hold on the returned proof digest and human-signature boundary. VO: "Meridian also publishes an Agent Skill. Agents query the same active proof and simulate policy, but only a human can enact."
 
 **Act 3 — the proof stack (2:30–3:00)**
 - 2:30–2:44 · Terminal: `pnpm judge` runs, scoreboard prints green. VO: "One command: a hundred and two thousand property cases, five hundred differential vectors, nine-of-nine live sandbox calls, deployed contracts. The repo audits itself."
 - 2:44–3:00 · On-screen: composition census + measured study numbers. VO: "Our conservative census names fifty-nine projects here that can consume this proof today. We measured the need: seventy tokens, seven chains, six holders stranded, one hundred fifty-one thousand dollars — before a rule ever became law."
 
-**End card (3:00–3:05):** logo, `github.com/iamdflame/meridian`, `meridian-three-olive.vercel.app/verify`, PolicyRegistry `0xe522…DED6`, proof-anchor tx `0x35cc…309d`, and `pnpm judge 9/9`. Silence.
+**End card (3:00–3:05):** use the shipped card [docs/assets/end-card.png](assets/end-card.png) — logo, repo, live URL + `/verify`, PolicyRegistry `0xe522…DED6`, proof-anchor tx `0x35cc…309d`, `pnpm judge → 9/9`. Silence.
+
+> **Recording?** The complete click-by-click production kit — separate ElevenLabs clips, per-shot instructions, edit steps, and shipped card assets — is [docs/16-demo-kit.md](16-demo-kit.md).
 
 ## Shot list (split)
 
